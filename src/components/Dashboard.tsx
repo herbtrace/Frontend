@@ -33,6 +33,7 @@ interface User {
 interface DashboardProps {
   onRegisterNew: () => void;
   onLogout: () => void;
+  onShowAnalytics: () => void;
   user: User | null;
 }
 
@@ -105,7 +106,7 @@ const recentRegistrations = [
   { id: 'HT-2024-006', name: 'AyurLab Testing Services', type: 'Quality Lab', location: 'Chennai, Tamil Nadu', status: 'Documentation Required', date: '2 days ago' }
 ];
 
-export const Dashboard = ({ onRegisterNew, onLogout, user }: DashboardProps) => {
+export const Dashboard = ({ onRegisterNew, onLogout, onShowAnalytics, user }: DashboardProps) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
@@ -168,13 +169,18 @@ export const Dashboard = ({ onRegisterNew, onLogout, user }: DashboardProps) => 
             <Button
               key={item.id}
               variant={item.active ? "default" : "ghost"}
+              onClick={() => {
+                if (item.id === 'analytics') {
+                  onShowAnalytics();
+                }
+              }}
               className={`w-full h-9 text-sm ${
                 sidebarCollapsed
                   ? 'justify-center px-0'
                   : 'justify-start px-3'
               } ${
                 item.active
-                  ? 'bg-green-600 hover:bg-green-700 text-white shadow-sm'
+                  ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm'
                   : 'hover:bg-gray-50 text-gray-700 hover:text-gray-900'
               }`}
             >

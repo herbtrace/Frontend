@@ -4,11 +4,13 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Dashboard } from "@/components/Dashboard";
+import { Analytics } from "@/components/Analytics";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Home() {
   const [showDashboard, setShowDashboard] = useState(false);
+  const [showAnalytics, setShowAnalytics] = useState(false);
   const { isAuthenticated, user, logout, isLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -40,7 +42,18 @@ export default function Home() {
 
   const handleLogout = () => {
     setShowDashboard(false);
+    setShowAnalytics(false);
     logout();
+  };
+
+  const handleShowAnalytics = () => {
+    setShowAnalytics(true);
+    setShowDashboard(false);
+  };
+
+  const handleBackToDashboard = () => {
+    setShowAnalytics(false);
+    setShowDashboard(true);
   };
 
   // Show loading spinner while checking authentication
@@ -55,9 +68,14 @@ export default function Home() {
     );
   }
 
+  // Show analytics page
+  if (showAnalytics) {
+    return <Analytics onBack={handleBackToDashboard} onLogout={handleLogout} onRegisterNew={handleRegisterClick} user={user} />;
+  }
+
   // Show dashboard after login/registration
   if (showDashboard) {
-    return <Dashboard onRegisterNew={handleRegisterClick} onLogout={handleLogout} user={user} />;
+    return <Dashboard onRegisterNew={handleRegisterClick} onLogout={handleLogout} onShowAnalytics={handleShowAnalytics} user={user} />;
   }
 
   return (
