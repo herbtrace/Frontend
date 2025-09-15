@@ -49,59 +49,60 @@ const metrics = [
   {
     id: 'farmers',
     icon: Users,
-    value: '25',
-    label: 'Farmers',
-    change: '+12%',
+    value: '1,247',
+    label: 'Registered Farmers',
+    change: '+18% this month',
     trend: 'up'
   },
   {
     id: 'labs',
     icon: FlaskConical,
-    value: '4',
-    label: 'Quality Labs',
-    change: 'Certified',
+    value: '23',
+    label: 'Certified Labs',
+    change: '100% verified',
     trend: 'stable'
   },
   {
     id: 'chains',
     icon: Factory,
-    value: '12',
-    label: 'Supply Chains',
-    change: 'Active',
+    value: '156',
+    label: 'Active Chains',
+    change: '+24% growth',
     trend: 'up'
   },
   {
     id: 'deliveries',
     icon: Truck,
-    value: '30',
+    value: '3,842',
     label: 'Deliveries',
-    change: '+8%',
+    change: '+12% this week',
     trend: 'up'
   },
   {
     id: 'crops',
     icon: Wheat,
-    value: '8',
-    label: 'Crops Registered',
-    change: 'This month',
+    value: '67',
+    label: 'Crop Varieties',
+    change: '8 new this month',
     trend: 'stable'
   },
   {
     id: 'warehouses',
     icon: Warehouse,
-    value: '3',
-    label: 'Warehouses',
-    change: 'Online',
+    value: '31',
+    label: 'Storage Centers',
+    change: '28 online',
     trend: 'stable'
   }
 ];
 
 const recentRegistrations = [
-  { id: 'REG-001', name: 'Green Valley Herbs', type: 'Farmer', location: 'Maharashtra', status: 'Approved', date: '2 hours ago' },
-  { id: 'REG-002', name: 'Herbal Lab Solutions', type: 'Quality Lab', location: 'Gujarat', status: 'Pending', date: '5 hours ago' },
-  { id: 'REG-003', name: 'Natural Processing Co.', type: 'Manufacturer', location: 'Karnataka', status: 'Approved', date: '1 day ago' },
-  { id: 'REG-004', name: 'Supply Chain Logistics', type: 'Distributor', location: 'Tamil Nadu', status: 'Approved', date: '2 days ago' },
-  { id: 'REG-005', name: 'Organic Farms Ltd.', type: 'Farmer', location: 'Punjab', status: 'Review', date: '3 days ago' }
+  { id: 'HT-2024-001', name: 'Ashwagandha Organics Pvt Ltd', type: 'Farmer', location: 'Rajasthan, India', status: 'Approved', date: '23 minutes ago' },
+  { id: 'HT-2024-002', name: 'BioTest Herbal Analytics', type: 'Quality Lab', location: 'Bangalore, Karnataka', status: 'Under Review', date: '1 hour ago' },
+  { id: 'HT-2024-003', name: 'Himalayan Herbs Processing', type: 'Manufacturer', location: 'Uttarakhand, India', status: 'Approved', date: '3 hours ago' },
+  { id: 'HT-2024-004', name: 'Green Supply Chain Solutions', type: 'Distributor', location: 'Mumbai, Maharashtra', status: 'Approved', date: '6 hours ago' },
+  { id: 'HT-2024-005', name: 'Tulsi Valley Farm Collective', type: 'Farmer', location: 'Kerala, India', status: 'Pending Verification', date: '1 day ago' },
+  { id: 'HT-2024-006', name: 'AyurLab Testing Services', type: 'Quality Lab', location: 'Chennai, Tamil Nadu', status: 'Documentation Required', date: '2 days ago' }
 ];
 
 export const Dashboard = ({ onRegisterNew, onLogout, user }: DashboardProps) => {
@@ -109,61 +110,93 @@ export const Dashboard = ({ onRegisterNew, onLogout, user }: DashboardProps) => 
 
   return (
     <div className="min-h-screen bg-white flex">
-      {/* Sexy Sidebar */}
-      <div className={`${sidebarCollapsed ? 'w-16' : 'w-64'} bg-white border-r border-gray-100 transition-all duration-300 ease-in-out flex flex-col`}>
+      {/* Sidebar */}
+      <div className={`${sidebarCollapsed ? 'w-14' : 'w-60'} bg-white border-r border-gray-200/60 transition-all duration-300 ease-in-out flex flex-col shadow-sm`}>
         {/* Sidebar Header */}
-        <div className="p-6 border-b border-gray-100">
+        <div className="p-4 border-b border-gray-200/60">
           <div className="flex items-center justify-between">
-            {!sidebarCollapsed && (
-              <div className="flex items-center space-x-3">
+            {!sidebarCollapsed ? (
+              <div className="flex items-center space-x-2.5">
                 <Image
                   src="/logo.png"
                   alt="Herbtrace Logo"
-                  width={28}
-                  height={28}
+                  width={24}
+                  height={24}
                   className="rounded-lg"
                 />
-                <span className="text-lg font-semibold text-black">Herbtrace</span>
+                <span className="text-base font-medium text-gray-900">Herbtrace</span>
+              </div>
+            ) : (
+              <div className="flex justify-center w-full">
+                <Image
+                  src="/logo.png"
+                  alt="Herbtrace Logo"
+                  width={20}
+                  height={20}
+                  className="rounded-lg"
+                />
               </div>
             )}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="hover:bg-gray-100 p-1.5"
-            >
-              {sidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-            </Button>
+            {!sidebarCollapsed && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                className="hover:bg-gray-100 p-1 h-7 w-7 flex-shrink-0"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+              </Button>
+            )}
           </div>
+          {sidebarCollapsed && (
+            <div className="flex justify-center mt-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                className="hover:bg-gray-100 p-1 h-7 w-7"
+              >
+                <ChevronRight className="w-3.5 h-3.5" />
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Menu Items */}
-        <div className="flex-1 p-4 space-y-1">
+        <div className="flex-1 p-3 space-y-0.5">
           {menuItems.map((item) => (
             <Button
               key={item.id}
               variant={item.active ? "default" : "ghost"}
-              className={`w-full justify-start h-11 ${
+              className={`w-full h-9 text-sm ${
+                sidebarCollapsed
+                  ? 'justify-center px-0'
+                  : 'justify-start px-3'
+              } ${
                 item.active
-                  ? 'bg-green-600 hover:bg-green-700 text-white'
-                  : 'hover:bg-gray-100 text-gray-700'
+                  ? 'bg-green-600 hover:bg-green-700 text-white shadow-sm'
+                  : 'hover:bg-gray-50 text-gray-700 hover:text-gray-900'
               }`}
             >
-              <item.icon className="w-4 h-4" />
-              {!sidebarCollapsed && <span className="ml-3">{item.label}</span>}
+              <item.icon className="w-4 h-4 flex-shrink-0" />
+              {!sidebarCollapsed && <span className="ml-2.5 font-medium">{item.label}</span>}
             </Button>
           ))}
         </div>
 
         {/* Sidebar Footer */}
-        <div className="p-4 border-t border-gray-100">
+        <div className="p-3 border-t border-gray-200/60">
           <Button
             variant="ghost"
             onClick={onLogout}
-            className="w-full justify-start h-11 hover:bg-red-50 hover:text-red-600"
+            className={`w-full h-9 text-sm ${
+              sidebarCollapsed
+                ? 'justify-center px-0'
+                : 'justify-start px-3'
+            } hover:bg-red-50 hover:text-red-600 text-gray-700`}
           >
-            <LogOut className="w-4 h-4" />
-            {!sidebarCollapsed && <span className="ml-3">Logout</span>}
+            <LogOut className="w-4 h-4 flex-shrink-0" />
+            {!sidebarCollapsed && <span className="ml-2.5 font-medium">Logout</span>}
           </Button>
         </div>
       </div>
@@ -171,24 +204,25 @@ export const Dashboard = ({ onRegisterNew, onLogout, user }: DashboardProps) => 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col">
         {/* Top Header */}
-        <header className="bg-white border-b border-gray-100 px-8 py-4">
+        <header className="bg-white border-b border-gray-200/60 px-6 py-3.5">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-semibold text-black">Dashboard</h1>
-              <p className="text-sm text-gray-500 mt-0.5">Welcome back, {user?.name}</p>
+              <h1 className="text-xl font-semibold text-gray-900">Dashboard</h1>
+              <p className="text-xs text-gray-500 mt-0.5">Welcome back, {user?.name}</p>
             </div>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
               <Button
                 onClick={onRegisterNew}
-                className="bg-green-600 hover:bg-green-700 text-white border-0 shadow-sm"
+                size="sm"
+                className="bg-green-600 hover:bg-green-700 text-white border-0 shadow-sm h-8 text-xs px-3"
               >
-                <Plus className="w-4 h-4 mr-2" />
+                <Plus className="w-3.5 h-3.5 mr-1.5" />
                 Register Entity
               </Button>
 
-              <Avatar className="w-9 h-9 ring-2 ring-gray-100">
-                <AvatarFallback className="bg-green-100 text-green-700 font-medium">
+              <Avatar className="w-7 h-7 ring-1 ring-gray-200">
+                <AvatarFallback className="bg-green-100 text-green-700 font-medium text-sm">
                   {user?.name?.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
@@ -197,30 +231,30 @@ export const Dashboard = ({ onRegisterNew, onLogout, user }: DashboardProps) => 
         </header>
 
         {/* Dashboard Body */}
-        <main className="flex-1 p-8 bg-gray-50/30">
-          {/* Sexy Metrics Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <main className="flex-1 p-5 bg-gray-50/40">
+          {/* Metrics Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
             {metrics.map((metric) => (
               <Card
                 key={metric.id}
-                className="group bg-white border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 rounded-xl overflow-hidden"
+                className="group bg-white border border-gray-200/60 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 rounded-lg overflow-hidden"
               >
-                <CardContent className="p-6">
+                <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-500 mb-2">{metric.label}</p>
+                      <p className="text-xs font-medium text-gray-500 mb-1.5">{metric.label}</p>
                       <div className="flex items-center space-x-2">
-                        <h3 className="text-3xl font-bold text-black">{metric.value}</h3>
+                        <h3 className="text-2xl font-bold text-gray-900">{metric.value}</h3>
                         <Badge
                           variant="secondary"
-                          className="bg-green-50 text-green-700 text-xs px-2 py-0.5"
+                          className="bg-green-50 text-green-700 text-xs px-1.5 py-0.5 font-medium"
                         >
                           {metric.change}
                         </Badge>
                       </div>
                     </div>
-                    <div className="p-3 bg-green-100 rounded-xl group-hover:bg-green-200 transition-colors">
-                      <metric.icon className="w-6 h-6 text-green-600" />
+                    <div className="p-2.5 bg-green-100 rounded-lg group-hover:bg-green-200 transition-colors">
+                      <metric.icon className="w-5 h-5 text-green-600" />
                     </div>
                   </div>
                 </CardContent>
@@ -229,11 +263,11 @@ export const Dashboard = ({ onRegisterNew, onLogout, user }: DashboardProps) => 
           </div>
 
           {/* Recent Registrations Table */}
-          <Card className="bg-white border border-gray-100 shadow-sm rounded-xl">
-            <CardHeader className="border-b border-gray-100 px-6 py-4">
+          <Card className="bg-white border border-gray-200/60 shadow-sm rounded-lg">
+            <CardHeader className="border-b border-gray-200/60 px-5 py-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg font-semibold text-black">Recent Registrations</CardTitle>
-                <Badge variant="outline" className="text-xs">
+                <CardTitle className="text-base font-semibold text-gray-900">Recent Registrations</CardTitle>
+                <Badge variant="outline" className="text-xs font-medium">
                   {recentRegistrations.length} new
                 </Badge>
               </div>
@@ -241,37 +275,37 @@ export const Dashboard = ({ onRegisterNew, onLogout, user }: DashboardProps) => 
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-gray-100">
-                    <TableHead className="font-medium text-gray-600 px-6">ID</TableHead>
-                    <TableHead className="font-medium text-gray-600">Name</TableHead>
-                    <TableHead className="font-medium text-gray-600">Type</TableHead>
-                    <TableHead className="font-medium text-gray-600">Location</TableHead>
-                    <TableHead className="font-medium text-gray-600">Status</TableHead>
-                    <TableHead className="font-medium text-gray-600 px-6">Date</TableHead>
+                  <TableRow className="border-gray-200/60">
+                    <TableHead className="font-medium text-gray-600 px-5 py-2.5 text-xs">Registration ID</TableHead>
+                    <TableHead className="font-medium text-gray-600 py-2.5 text-xs">Organization</TableHead>
+                    <TableHead className="font-medium text-gray-600 py-2.5 text-xs">Type</TableHead>
+                    <TableHead className="font-medium text-gray-600 py-2.5 text-xs">Location</TableHead>
+                    <TableHead className="font-medium text-gray-600 py-2.5 text-xs">Status</TableHead>
+                    <TableHead className="font-medium text-gray-600 px-5 py-2.5 text-xs">Registered</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {recentRegistrations.map((reg) => (
-                    <TableRow key={reg.id} className="border-gray-100 hover:bg-gray-50/50">
-                      <TableCell className="font-mono text-sm text-gray-600 px-6">{reg.id}</TableCell>
-                      <TableCell className="font-medium text-black">{reg.name}</TableCell>
-                      <TableCell className="text-gray-600">{reg.type}</TableCell>
-                      <TableCell className="text-gray-600">{reg.location}</TableCell>
-                      <TableCell>
+                    <TableRow key={reg.id} className="border-gray-200/60 hover:bg-gray-50/30">
+                      <TableCell className="font-mono text-xs text-gray-600 px-5 py-3">{reg.id}</TableCell>
+                      <TableCell className="font-medium text-sm text-gray-900 py-3">{reg.name}</TableCell>
+                      <TableCell className="text-sm text-gray-600 py-3">{reg.type}</TableCell>
+                      <TableCell className="text-sm text-gray-600 py-3">{reg.location}</TableCell>
+                      <TableCell className="py-3">
                         <Badge
-                          variant={reg.status === 'Approved' ? 'default' : reg.status === 'Pending' ? 'secondary' : 'outline'}
+                          variant={reg.status === 'Approved' ? 'default' : reg.status.includes('Pending') ? 'secondary' : 'outline'}
                           className={
                             reg.status === 'Approved'
-                              ? 'bg-green-100 text-green-700 hover:bg-green-100'
-                              : reg.status === 'Pending'
-                              ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-100'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
+                              ? 'bg-green-100 text-green-700 hover:bg-green-100 text-xs font-medium'
+                              : reg.status.includes('Pending') || reg.status.includes('Review')
+                              ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-100 text-xs font-medium'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-100 text-xs font-medium'
                           }
                         >
                           {reg.status}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-sm text-gray-500 px-6">{reg.date}</TableCell>
+                      <TableCell className="text-xs text-gray-500 px-5 py-3">{reg.date}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

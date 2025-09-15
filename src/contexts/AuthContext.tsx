@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface User {
   id: string;
@@ -13,6 +13,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   isAuthenticated: boolean;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -31,6 +32,21 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load user from localStorage on mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem('herbtrace_user');
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error('Error parsing stored user:', error);
+        localStorage.removeItem('herbtrace_user');
+      }
+    }
+    setIsLoading(false);
+  }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     // Dummy authentication - accept any email/password
@@ -41,6 +57,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         name: email.split('@')[0]
       };
       setUser(dummyUser);
+      localStorage.setItem('herbtrace_user', JSON.stringify(dummyUser));
       return true;
     }
     return false;
@@ -48,13 +65,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const logout = () => {
     setUser(null);
+    localStorage.removeItem('herbtrace_user');
   };
 
   const value = {
     user,
     login,
     logout,
-    isAuthenticated: !!user
+    isAuthenticated: !!user,
+    isLoading
   };
 
   return (
