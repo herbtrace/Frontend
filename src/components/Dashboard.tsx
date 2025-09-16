@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { ProfileCreation } from "@/components/profile-creation/ProfileCreation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -22,7 +23,6 @@ import {
   Package,
   Shield,
 } from "lucide-react";
-import { ProfileCreation } from "./profile-creation";
 
 interface User {
   id: string;
@@ -39,11 +39,6 @@ interface DashboardProps {
 const menuItems = [
   { id: 'dashboard', label: 'Overview', icon: Home },
   { id: 'create-profile', label: 'Create Profile', icon: Plus },
-  { id: 'farmers', label: 'Farmers', icon: Users },
-  { id: 'labs', label: 'Laboratories', icon: FlaskConical },
-  { id: 'verification', label: 'Verification', icon: Shield },
-  { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-  { id: 'settings', label: 'Settings', icon: Settings },
 ];
 
 const stats = [
@@ -55,7 +50,7 @@ const stats = [
 
 export const Dashboard = ({ onLogout, onShowAnalytics, user }: DashboardProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'create-profile'>('dashboard');
+  const [currentView, setCurrentView] = useState('dashboard');
 
   return (
     <div className="h-screen bg-white flex overflow-hidden">
@@ -110,17 +105,14 @@ export const Dashboard = ({ onLogout, onShowAnalytics, user }: DashboardProps) =
               onClick={() => {
                 if (item.id === 'analytics') {
                   onShowAnalytics();
-                } else if (item.id === 'create-profile') {
-                  setCurrentView('create-profile');
-                } else if (item.id === 'dashboard') {
-                  setCurrentView('dashboard');
+                } else {
+                  setCurrentView(item.id);
                 }
               }}
               className={`w-full ${
                 sidebarOpen ? 'justify-start px-3' : 'justify-center px-0'
               } h-9 text-sm font-normal transition-colors ${
-                (item.id === 'dashboard' && currentView === 'dashboard') ||
-                (item.id === 'create-profile' && currentView === 'create-profile')
+                currentView === item.id
                   ? 'bg-teal-50 text-teal-600 hover:bg-teal-50'
                   : 'text-black hover:bg-gray-50'
               }`}
@@ -162,17 +154,13 @@ export const Dashboard = ({ onLogout, onShowAnalytics, user }: DashboardProps) =
       </div>
 
       {/* Main Content Area */}
-      {currentView === 'create-profile' ? (
-        <ProfileCreation
-          onBack={() => setCurrentView('dashboard')}
-          user={user}
-        />
-      ) : (
-        <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden">
           {/* Minimalist Header */}
           <header className="h-12 bg-white border-b border-gray-100 px-6 flex items-center justify-between">
             <div>
-              <h1 className="text-lg font-normal text-black">Dashboard</h1>
+              <h1 className="text-lg font-normal text-black">
+                {currentView === 'create-profile' ? 'Create Profile' : 'Dashboard'}
+              </h1>
             </div>
             <div className="flex items-center space-x-2">
               <Button variant="ghost" size="sm" className="relative hover:bg-gray-50 h-8 w-8 p-0">
@@ -187,6 +175,13 @@ export const Dashboard = ({ onLogout, onShowAnalytics, user }: DashboardProps) =
 
           {/* Dashboard Content */}
           <main className="flex-1 overflow-auto p-4">
+            {currentView === 'create-profile' ? (
+              <ProfileCreation
+                onBack={() => setCurrentView('dashboard')}
+                user={user}
+              />
+            ) : (
+              <>
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
               {stats.map((stat, index) => (
@@ -321,9 +316,10 @@ export const Dashboard = ({ onLogout, onShowAnalytics, user }: DashboardProps) =
                 </div>
               </CardContent>
             </Card>
+              </>
+            )}
           </main>
         </div>
-      )}
     </div>
   );
 };

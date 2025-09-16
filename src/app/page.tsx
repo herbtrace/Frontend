@@ -1,56 +1,29 @@
 'use client';
 
 import Image from "next/image";
-import { useState, useEffect, Suspense } from "react";
+import { useEffect, Suspense } from "react";
 import { Button } from "@/components/ui/button";
-import { Dashboard } from "@/components/Dashboard";
-import { Analytics } from "@/components/Analytics";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
 
 function HomeContent() {
-  const [showDashboard, setShowDashboard] = useState(false);
-  const [showAnalytics, setShowAnalytics] = useState(false);
-  const { isAuthenticated, user, logout, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Automatically show dashboard if user is authenticated
+  // Automatically redirect to dashboard if user is authenticated
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      setShowDashboard(true);
-      // Clean up URL parameter if present
-      if (searchParams.get('showDashboard') === 'true') {
-        router.replace('/');
-      }
-    } else if (!isLoading && !isAuthenticated) {
-      setShowDashboard(false);
+      router.push('/dashboard');
     }
-  }, [isAuthenticated, isLoading, searchParams, router]);
+  }, [isAuthenticated, isLoading, router]);
 
   const handleLogin = () => {
     if (isAuthenticated) {
-      setShowDashboard(true);
+      router.push('/dashboard');
     } else {
       router.push('/login');
     }
-  };
-
-
-  const handleLogout = () => {
-    setShowDashboard(false);
-    setShowAnalytics(false);
-    logout();
-  };
-
-  const handleShowAnalytics = () => {
-    setShowAnalytics(true);
-    setShowDashboard(false);
-  };
-
-  const handleBackToDashboard = () => {
-    setShowAnalytics(false);
-    setShowDashboard(true);
   };
 
   // Show loading spinner while checking authentication
@@ -65,15 +38,6 @@ function HomeContent() {
     );
   }
 
-  // Show analytics page
-  if (showAnalytics) {
-    return <Analytics onBack={handleBackToDashboard} onLogout={handleLogout} user={user} />;
-  }
-
-  // Show dashboard after login
-  if (showDashboard) {
-    return <Dashboard onLogout={handleLogout} onShowAnalytics={handleShowAnalytics} user={user} />;
-  }
 
   return (
     <div className="min-h-screen bg-white">
