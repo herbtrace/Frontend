@@ -163,25 +163,6 @@ export const ProfileCreation = ({ onBack, user }: ProfileCreationProps) => {
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-white">
-      {/* Minimalist Header */}
-      <header className="h-12 bg-white border-b border-gray-100 px-6 flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Button variant="ghost" onClick={onBack} className="hover:bg-gray-50 text-black h-8 text-sm font-normal">
-            <ArrowLeft className="w-3 h-3 mr-2" />
-            Back to Dashboard
-          </Button>
-          <div>
-            <h1 className="text-lg font-normal text-black">Create New Profile</h1>
-          </div>
-        </div>
-        <div className="flex items-center space-x-2">
-          {selectedRole && (
-            <Badge variant="secondary" className="capitalize bg-teal-100 text-teal-700 border-0 text-xs">
-              {selectedRole.replace('_', ' ')}
-            </Badge>
-          )}
-        </div>
-      </header>
 
       {/* Main Content */}
       <main className="flex-1 overflow-auto p-4">

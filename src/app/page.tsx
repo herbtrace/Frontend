@@ -74,7 +74,7 @@ function HomeContent() {
             <div>
               <h3 className="text-lg font-medium text-gray-700 mb-2">Join the Future of Herbal Medicine</h3>
               <p className="text-gray-500 text-sm mb-6">
-                Whether you're a farmer, lab technician, manufacturer, or distributor -
+                Whether you&apos;re a farmer, lab technician, manufacturer, or distributor -
                 be part of the transparent supply chain revolution.
               </p>
             </div>

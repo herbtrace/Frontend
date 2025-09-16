@@ -4,10 +4,15 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { ProfileCreation } from "@/components/profile-creation/ProfileCreation";
+import { ChartAreaInteractive } from "@/components/charts/ChartAreaInteractive";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Menu,
   LogOut,
@@ -21,6 +26,14 @@ import {
   TrendingUp,
   Package,
   Shield,
+  Calendar,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
+  ArrowUpRight,
+  ArrowDownRight,
+  Bell,
+  Search,
 } from "lucide-react";
 
 interface User {
@@ -41,10 +54,121 @@ const menuItems = [
 ];
 
 const stats = [
-  { label: 'Total Profiles', value: '2,847', change: '+12%', icon: Users },
-  { label: 'Active Transactions', value: '1,234', change: '+8%', icon: Activity },
-  { label: 'Verified Products', value: '5,678', change: '+15%', icon: Package },
-  { label: 'Quality Tests', value: '892', change: '+3%', icon: FlaskConical },
+  {
+    label: 'Total Profiles',
+    value: '2,847',
+    change: '+12%',
+    changeValue: 12,
+    icon: Users,
+    trend: 'up',
+    description: 'vs last month',
+    progress: 85
+  },
+  {
+    label: 'Active Transactions',
+    value: '1,234',
+    change: '+8%',
+    changeValue: 8,
+    icon: Activity,
+    trend: 'up',
+    description: 'vs last month',
+    progress: 67
+  },
+  {
+    label: 'Verified Products',
+    value: '5,678',
+    change: '+15%',
+    changeValue: 15,
+    icon: Package,
+    trend: 'up',
+    description: 'vs last month',
+    progress: 92
+  },
+  {
+    label: 'Quality Tests',
+    value: '892',
+    change: '+3%',
+    changeValue: 3,
+    icon: FlaskConical,
+    trend: 'up',
+    description: 'vs last month',
+    progress: 45
+  },
+];
+
+const recentActivities = [
+  {
+    id: 1,
+    type: 'profile',
+    title: 'New farmer profile created',
+    description: 'Rajesh Kumar from Punjab',
+    time: '2 minutes ago',
+    status: 'completed',
+    icon: Users
+  },
+  {
+    id: 2,
+    type: 'transaction',
+    title: 'Transaction validated',
+    description: 'Batch #TXN-2024-001 approved',
+    time: '15 minutes ago',
+    status: 'completed',
+    icon: CheckCircle2
+  },
+  {
+    id: 3,
+    type: 'quality',
+    title: 'Quality test completed',
+    description: 'Pesticide residue test passed',
+    time: '1 hour ago',
+    status: 'completed',
+    icon: FlaskConical
+  },
+  {
+    id: 4,
+    type: 'alert',
+    title: 'System alert',
+    description: 'Low inventory warning',
+    time: '2 hours ago',
+    status: 'warning',
+    icon: AlertCircle
+  },
+  {
+    id: 5,
+    type: 'transaction',
+    title: 'New transaction initiated',
+    description: 'Batch #TXN-2024-002 started',
+    time: '3 hours ago',
+    status: 'pending',
+    icon: Activity
+  }
+];
+
+const upcomingTasks = [
+  {
+    id: 1,
+    title: 'Quality inspection due',
+    description: 'Lab test for Batch #PRD-001',
+    dueDate: 'Today, 4:00 PM',
+    priority: 'high',
+    status: 'pending'
+  },
+  {
+    id: 2,
+    title: 'Profile verification',
+    description: 'Review pending farmer applications',
+    dueDate: 'Tomorrow, 10:00 AM',
+    priority: 'medium',
+    status: 'pending'
+  },
+  {
+    id: 3,
+    title: 'Monthly report',
+    description: 'Generate supply chain analytics',
+    dueDate: 'Dec 30, 2024',
+    priority: 'low',
+    status: 'pending'
+  }
 ];
 
 export const Dashboard = ({ onLogout, onShowAnalytics, user, initialView = 'dashboard' }: DashboardProps & { initialView?: 'dashboard' | 'create-profile' }) => {
@@ -113,7 +237,7 @@ export const Dashboard = ({ onLogout, onShowAnalytics, user, initialView = 'dash
                 sidebarOpen ? 'justify-start px-3' : 'justify-center px-0'
               } h-9 text-sm font-normal transition-colors ${
                 currentView === item.id
-                  ? 'bg-teal-50 text-teal-600 hover:bg-teal-50'
+                  ? 'bg-green-50 text-green-600 hover:bg-green-50'
                   : 'text-black hover:bg-gray-50'
               }`}
             >
@@ -129,7 +253,7 @@ export const Dashboard = ({ onLogout, onShowAnalytics, user, initialView = 'dash
             sidebarOpen ? 'space-x-2' : 'justify-center'
           }`}>
             <Avatar className="w-6 h-6">
-              <AvatarFallback className="bg-teal-100 text-teal-600 font-normal text-xs">
+              <AvatarFallback className="bg-green-100 text-green-600 font-normal text-xs">
                 {user?.name?.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
@@ -156,9 +280,9 @@ export const Dashboard = ({ onLogout, onShowAnalytics, user, initialView = 'dash
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
           {/* Minimalist Header */}
-          <header className="h-12 bg-white border-b border-gray-100 px-6 flex items-center justify-between">
+          <header className="h-10 bg-white border-b border-gray-100 px-6 flex items-center justify-between">
             <div>
-              <h1 className="text-lg font-normal text-black">
+              <h1 className="text-base font-normal text-black">
                 {currentView === 'create-profile' ? 'Create Profile' : 'Dashboard'}
               </h1>
             </div>
@@ -166,7 +290,7 @@ export const Dashboard = ({ onLogout, onShowAnalytics, user, initialView = 'dash
           </header>
 
           {/* Dashboard Content */}
-          <main className="flex-1 overflow-auto p-4">
+          <main className="flex-1 overflow-auto p-3">
             {currentView === 'create-profile' ? (
               <ProfileCreation
                 onBack={() => setCurrentView('dashboard')}
@@ -175,7 +299,7 @@ export const Dashboard = ({ onLogout, onShowAnalytics, user, initialView = 'dash
             ) : (
               <>
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
               {stats.map((stat, index) => (
                 <Card key={index} className="border border-gray-100 bg-white">
                   <CardContent className="p-3">
@@ -184,12 +308,12 @@ export const Dashboard = ({ onLogout, onShowAnalytics, user, initialView = 'dash
                         <p className="text-xs font-normal text-gray-600">{stat.label}</p>
                         <p className="text-lg font-normal text-black mt-1">{stat.value}</p>
                         <div className="flex items-center mt-1">
-                          <TrendingUp className="w-3 h-3 text-teal-600 mr-1" />
-                          <span className="text-xs text-teal-600 font-normal">{stat.change}</span>
+                          <TrendingUp className="w-3 h-3 text-green-600 mr-1" />
+                          <span className="text-xs text-green-600 font-normal">{stat.change}</span>
                         </div>
                       </div>
-                      <div className="w-8 h-8 rounded bg-teal-50 flex items-center justify-center">
-                        <stat.icon className="w-4 h-4 text-teal-600" />
+                      <div className="w-8 h-8 rounded bg-green-50 flex items-center justify-center">
+                        <stat.icon className="w-4 h-4 text-green-600" />
                       </div>
                     </div>
                   </CardContent>
@@ -198,18 +322,18 @@ export const Dashboard = ({ onLogout, onShowAnalytics, user, initialView = 'dash
             </div>
 
             {/* Action Cards */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-4">
               <Card className="border border-gray-100 bg-white">
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center text-black text-sm font-normal">
-                    <Plus className="w-4 h-4 mr-2 text-teal-600" />
+                    <Plus className="w-4 h-4 mr-2 text-green-600" />
                     Quick Actions
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <Button
                     onClick={() => router.push('/create-profile')}
-                    className="w-full justify-start h-9 bg-teal-600 hover:bg-teal-700 text-white border-0 text-sm font-normal"
+                    className="w-full justify-start h-9 bg-green-600 hover:bg-green-700 text-white border-0 text-sm font-normal"
                   >
                     <Plus className="w-3 h-3 mr-2" />
                     Create New Profile
@@ -228,28 +352,28 @@ export const Dashboard = ({ onLogout, onShowAnalytics, user, initialView = 'dash
               <Card className="border border-gray-100 bg-white">
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center text-black text-sm font-normal">
-                    <Activity className="w-4 h-4 mr-2 text-teal-600" />
+                    <Activity className="w-4 h-4 mr-2 text-green-600" />
                     Recent Activity
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
                     <div className="flex items-center space-x-2 p-2 rounded bg-gray-50">
-                      <div className="w-1 h-1 bg-teal-600 rounded-full"></div>
+                      <div className="w-1 h-1 bg-green-600 rounded-full"></div>
                       <div className="flex-1">
                         <p className="text-xs font-normal text-black">New farmer profile created</p>
                         <p className="text-xs text-gray-500">2 minutes ago</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2 p-2 rounded bg-gray-50">
-                      <div className="w-1 h-1 bg-teal-600 rounded-full"></div>
+                      <div className="w-1 h-1 bg-green-600 rounded-full"></div>
                       <div className="flex-1">
                         <p className="text-xs font-normal text-black">Transaction validated</p>
                         <p className="text-xs text-gray-500">15 minutes ago</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2 p-2 rounded bg-gray-50">
-                      <div className="w-1 h-1 bg-teal-600 rounded-full"></div>
+                      <div className="w-1 h-1 bg-green-600 rounded-full"></div>
                       <div className="flex-1">
                         <p className="text-xs font-normal text-black">Quality test completed</p>
                         <p className="text-xs text-gray-500">1 hour ago</p>
@@ -260,54 +384,8 @@ export const Dashboard = ({ onLogout, onShowAnalytics, user, initialView = 'dash
               </Card>
             </div>
 
-            {/* API Endpoints */}
-            <Card className="border border-gray-100 bg-white">
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center text-black text-sm font-normal">
-                  <Package className="w-4 h-4 mr-2 text-teal-600" />
-                  Available API Endpoints
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                  <div className="p-2 rounded border border-gray-200 hover:border-teal-300 transition-colors">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-normal text-black">Create Profile</span>
-                      <Badge variant="secondary" className="bg-teal-100 text-teal-700 border-0 text-xs px-1 py-0">POST</Badge>
-                    </div>
-                    <p className="text-xs text-gray-500">/profiles/create</p>
-                  </div>
-                  <div className="p-2 rounded border border-gray-200 hover:border-teal-300 transition-colors">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-normal text-black">SCM Login</span>
-                      <Badge variant="secondary" className="bg-teal-100 text-teal-700 border-0 text-xs px-1 py-0">POST</Badge>
-                    </div>
-                    <p className="text-xs text-gray-500">/profiles/login</p>
-                  </div>
-                  <div className="p-2 rounded border border-gray-200 hover:border-teal-300 transition-colors">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-normal text-black">Get Profile</span>
-                      <Badge variant="secondary" className="bg-teal-100 text-teal-700 border-0 text-xs px-1 py-0">POST</Badge>
-                    </div>
-                    <p className="text-xs text-gray-500">/transactions/get</p>
-                  </div>
-                  <div className="p-2 rounded border border-gray-200 hover:border-teal-300 transition-colors">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-normal text-black">Validate Transaction</span>
-                      <Badge variant="secondary" className="bg-teal-100 text-teal-700 border-0 text-xs px-1 py-0">POST</Badge>
-                    </div>
-                    <p className="text-xs text-gray-500">/transactions/validate</p>
-                  </div>
-                  <div className="p-2 rounded border border-gray-200 hover:border-teal-300 transition-colors">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-normal text-black">Start Collection</span>
-                      <Badge variant="secondary" className="bg-teal-100 text-teal-700 border-0 text-xs px-1 py-0">POST</Badge>
-                    </div>
-                    <p className="text-xs text-gray-500">/transactions/start</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Supply Chain Analytics Chart */}
+            <ChartAreaInteractive />
               </>
             )}
           </main>
