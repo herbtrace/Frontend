@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { ProfileCreation } from "@/components/profile-creation/ProfileCreation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,8 +17,6 @@ import {
   FlaskConical,
   Settings,
   Plus,
-  Bell,
-  Search,
   Activity,
   TrendingUp,
   Package,
@@ -37,8 +36,8 @@ interface DashboardProps {
 }
 
 const menuItems = [
-  { id: 'dashboard', label: 'Overview', icon: Home },
-  { id: 'create-profile', label: 'Create Profile', icon: Plus },
+  { id: 'dashboard', label: 'Overview', icon: Home, href: '/dashboard' },
+  { id: 'create-profile', label: 'Create Profile', icon: Plus, href: '/create-profile' },
 ];
 
 const stats = [
@@ -48,9 +47,10 @@ const stats = [
   { label: 'Quality Tests', value: '892', change: '+3%', icon: FlaskConical },
 ];
 
-export const Dashboard = ({ onLogout, onShowAnalytics, user }: DashboardProps) => {
+export const Dashboard = ({ onLogout, onShowAnalytics, user, initialView = 'dashboard' }: DashboardProps & { initialView?: 'dashboard' | 'create-profile' }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [currentView, setCurrentView] = useState('dashboard');
+  const [currentView, setCurrentView] = useState(initialView);
+  const router = useRouter();
 
   return (
     <div className="h-screen bg-white flex overflow-hidden">
@@ -106,7 +106,7 @@ export const Dashboard = ({ onLogout, onShowAnalytics, user }: DashboardProps) =
                 if (item.id === 'analytics') {
                   onShowAnalytics();
                 } else {
-                  setCurrentView(item.id);
+                  router.push(item.href as string);
                 }
               }}
               className={`w-full ${
@@ -162,15 +162,7 @@ export const Dashboard = ({ onLogout, onShowAnalytics, user }: DashboardProps) =
                 {currentView === 'create-profile' ? 'Create Profile' : 'Dashboard'}
               </h1>
             </div>
-            <div className="flex items-center space-x-2">
-              <Button variant="ghost" size="sm" className="relative hover:bg-gray-50 h-8 w-8 p-0">
-                <Bell className="w-3 h-3 text-black" />
-                <Badge className="absolute -top-1 -right-1 h-3 w-3 p-0 text-xs bg-teal-600 text-white border-0 text-[10px]">3</Badge>
-              </Button>
-              <Button variant="ghost" size="sm" className="hover:bg-gray-50 h-8 w-8 p-0">
-                <Search className="w-3 h-3 text-black" />
-              </Button>
-            </div>
+            <div />
           </header>
 
           {/* Dashboard Content */}
@@ -216,7 +208,7 @@ export const Dashboard = ({ onLogout, onShowAnalytics, user }: DashboardProps) =
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <Button
-                    onClick={() => setCurrentView('create-profile')}
+                    onClick={() => router.push('/create-profile')}
                     className="w-full justify-start h-9 bg-teal-600 hover:bg-teal-700 text-white border-0 text-sm font-normal"
                   >
                     <Plus className="w-3 h-3 mr-2" />
