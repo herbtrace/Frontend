@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,7 +26,7 @@ export default function LoginPage() {
     try {
       const success = await login(formData.email, formData.password);
       if (success) {
-        router.push("/?showDashboard=true");
+        router.push("/dashboard");
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -41,6 +42,29 @@ export default function LoginPage() {
 
   return (
     <div className="bg-white flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
+      {/* Back to Home Button */}
+      <div className="w-full max-w-sm md:max-w-3xl mb-6">
+        <Link
+          href="/"
+          className="inline-flex items-center text-gray-600 hover:text-gray-800 transition-colors text-sm font-medium group"
+        >
+          <svg
+            className="w-4 h-4 mr-2 transition-transform group-hover:-translate-x-1"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
+          </svg>
+          Back to Home
+        </Link>
+      </div>
+
       <div className="w-full max-w-sm md:max-w-3xl">
         <Card className="overflow-hidden p-0 border-0 shadow-xl">
           <CardContent className="grid p-0 md:grid-cols-2">
