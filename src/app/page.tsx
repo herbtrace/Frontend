@@ -1,14 +1,14 @@
 'use client';
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Dashboard } from "@/components/Dashboard";
 import { Analytics } from "@/components/Analytics";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function Home() {
+function HomeContent() {
   const [showDashboard, setShowDashboard] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false);
   const { isAuthenticated, user, logout, isLoading } = useAuth();
@@ -36,9 +36,6 @@ export default function Home() {
     }
   };
 
-  const handleRegisterClick = () => {
-    router.push('/register');
-  };
 
   const handleLogout = () => {
     setShowDashboard(false);
@@ -70,12 +67,12 @@ export default function Home() {
 
   // Show analytics page
   if (showAnalytics) {
-    return <Analytics onBack={handleBackToDashboard} onLogout={handleLogout} onRegisterNew={handleRegisterClick} user={user} />;
+    return <Analytics onBack={handleBackToDashboard} onLogout={handleLogout} user={user} />;
   }
 
-  // Show dashboard after login/registration
+  // Show dashboard after login
   if (showDashboard) {
-    return <Dashboard onRegisterNew={handleRegisterClick} onLogout={handleLogout} onShowAnalytics={handleShowAnalytics} user={user} />;
+    return <Dashboard onLogout={handleLogout} onShowAnalytics={handleShowAnalytics} user={user} />;
   }
 
   return (
@@ -103,24 +100,32 @@ export default function Home() {
             Supply chain transparency from farm to pharmacy
           </p>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          {/* Action Button */}
+          <div className="flex justify-center">
             <Button
               onClick={handleLogin}
-              className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg font-medium border-0 rounded-md transition-colors"
+              className="bg-green-600 hover:bg-green-700 text-white px-12 py-4 text-lg font-medium border-0 rounded-md transition-colors"
             >
-              Log in
-            </Button>
-            <Button
-              onClick={handleRegisterClick}
-              variant="outline"
-              className="border-green-600 text-green-600 hover:bg-green-50 px-8 py-3 text-lg font-medium rounded-md transition-colors"
-            >
-              Register
+              Sign In
             </Button>
           </div>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <p className="text-gray-500 text-sm">Loading...</p>
+        </div>
+      </div>
+    }>
+      <HomeContent />
+    </Suspense>
   );
 }

@@ -1,11 +1,14 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { ApiService } from '@/services/api';
 
 interface User {
   id: string;
   email: string;
   name: string;
+  role?: string;
+  auth_token?: string;
 }
 
 interface AuthContextType {
@@ -16,7 +19,13 @@ interface AuthContextType {
   isLoading: boolean;
 }
 
-const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  login: async () => false,
+  logout: () => {},
+  isAuthenticated: false,
+  isLoading: false,
+} as AuthContextType);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -49,23 +58,31 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // Dummy authentication - accept any email/password
-    if (email && password) {
-      const dummyUser: User = {
-        id: '1',
-        email: email,
-        name: email.split('@')[0]
-      };
-      setUser(dummyUser);
-      localStorage.setItem('herbtrace_user', JSON.stringify(dummyUser));
-      return true;
+    try {
+      const response = await ApiService.loginSCM(email, password);
+      if (response.auth_token) {
+        const scmUser: User = {
+          id: response.auth_token,
+          email: response.company_email,
+          name: 'Supply Chain Manager',
+          role: response.role,
+          auth_token: response.auth_token
+        };
+        setUser(scmUser);
+        localStorage.setItem('herbtrace_user', JSON.stringify(scmUser));
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Login failed:', error);
+      return false;
     }
-    return false;
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('herbtrace_user');
+    ApiService.logout();
   };
 
   const value = {

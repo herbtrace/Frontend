@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Card } from "@/components/ui/card";
 import {
   ChevronLeft,
   ChevronRight,
@@ -15,14 +16,7 @@ import {
   FlaskConical,
   FileCheck,
   Settings,
-  Plus,
 } from "lucide-react";
-
-import { ChartLineInteractive } from "@/components/charts/ChartLineInteractive";
-import { ChartLineDefault } from "@/components/charts/ChartLineDefault";
-import { ChartLineLinear } from "@/components/charts/ChartLineLinear";
-import { ChartLineStep } from "@/components/charts/ChartLineStep";
-import { ChartLineMultiple } from "@/components/charts/ChartLineMultiple";
 
 interface User {
   id: string;
@@ -33,20 +27,19 @@ interface User {
 interface AnalyticsProps {
   onBack: () => void;
   onLogout: () => void;
-  onRegisterNew: () => void;
   user: User | null;
 }
 
 const menuItems = [
   { id: 'dashboard', label: 'Dashboard', icon: Home, active: false },
   { id: 'farmers', label: 'Farmers', icon: Users, active: false },
-  { id: 'labs', label: 'Quality Labs', icon: FlaskConical, active: false },
-  { id: 'registrations', label: 'Registrations', icon: FileCheck, active: false },
+  { id: 'labs', label: 'Labs', icon: FlaskConical, active: false },
+  { id: 'verification', label: 'Verification', icon: FileCheck, active: false },
   { id: 'analytics', label: 'Analytics', icon: BarChart3, active: true },
   { id: 'settings', label: 'Settings', icon: Settings, active: false },
 ];
 
-export const Analytics = ({ onBack, onLogout, onRegisterNew, user }: AnalyticsProps) => {
+export const Analytics = ({ onBack, onLogout, user }: AnalyticsProps) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
@@ -68,59 +61,41 @@ export const Analytics = ({ onBack, onLogout, onRegisterNew, user }: AnalyticsPr
                 <span className="text-base font-medium text-gray-900">Herbtrace</span>
               </div>
             ) : (
-              <div className="flex justify-center w-full">
-                <Image
-                  src="/logo.png"
-                  alt="Herbtrace Logo"
-                  width={20}
-                  height={20}
-                  className="rounded-lg"
-                />
-              </div>
+              <Image
+                src="/logo.png"
+                alt="Herbtrace Logo"
+                width={24}
+                height={24}
+                className="rounded-lg mx-auto"
+              />
             )}
-            {!sidebarCollapsed && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                className="hover:bg-gray-100 p-1 h-7 w-7 flex-shrink-0"
-              >
-                <ChevronLeft className="w-3.5 h-3.5" />
-              </Button>
-            )}
-          </div>
-          {sidebarCollapsed && (
-            <div className="flex justify-center mt-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                className="hover:bg-gray-100 p-1 h-7 w-7"
-              >
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="h-6 w-6 p-0 hover:bg-gray-100"
+            >
+              {sidebarCollapsed ? (
                 <ChevronRight className="w-3.5 h-3.5" />
-              </Button>
-            </div>
-          )}
+              ) : (
+                <ChevronLeft className="w-3.5 h-3.5" />
+              )}
+            </Button>
+          </div>
         </div>
 
         {/* Menu Items */}
-        <div className="flex-1 p-3 space-y-0.5">
+        <div className="flex-1 py-3">
           {menuItems.map((item) => (
             <Button
               key={item.id}
-              variant={item.active ? "default" : "ghost"}
-              onClick={() => {
-                if (item.id === 'dashboard') {
-                  onBack();
-                }
-              }}
-              className={`w-full h-9 text-sm ${
-                sidebarCollapsed
-                  ? 'justify-center px-0'
-                  : 'justify-start px-3'
-              } ${
+              variant="ghost"
+              onClick={item.id === 'dashboard' ? onBack : undefined}
+              className={`w-full ${
+                sidebarCollapsed ? 'justify-center px-0' : 'justify-start px-3'
+              } mx-2 my-0.5 h-9 text-sm ${
                 item.active
-                  ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm'
+                  ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-700'
                   : 'hover:bg-gray-50 text-gray-700 hover:text-gray-900'
               }`}
             >
@@ -130,8 +105,8 @@ export const Analytics = ({ onBack, onLogout, onRegisterNew, user }: AnalyticsPr
           ))}
         </div>
 
-        {/* Sidebar Footer */}
-        <div className="p-3 border-t border-gray-200/60">
+        {/* Logout Button */}
+        <div className="p-2 border-t border-gray-200/60">
           <Button
             variant="ghost"
             onClick={onLogout}
@@ -147,10 +122,10 @@ export const Analytics = ({ onBack, onLogout, onRegisterNew, user }: AnalyticsPr
         </div>
       </div>
 
-      {/* Main Content Area */}
+      {/* Main Content */}
       <div className="flex-1 flex flex-col">
-        {/* Top Header */}
-        <header className="bg-white border-b border-gray-200/60 px-6 py-3.5">
+        {/* Header */}
+        <header className="bg-white border-b border-gray-200/60 px-5 py-3 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-xl font-semibold text-gray-900">Analytics Dashboard</h1>
@@ -158,17 +133,8 @@ export const Analytics = ({ onBack, onLogout, onRegisterNew, user }: AnalyticsPr
             </div>
 
             <div className="flex items-center space-x-3">
-              <Button
-                onClick={onRegisterNew}
-                size="sm"
-                className="bg-emerald-600 hover:bg-emerald-700 text-white border-0 shadow-sm h-8 text-xs px-3"
-              >
-                <Plus className="w-3.5 h-3.5 mr-1.5" />
-                Register Entity
-              </Button>
-
               <Badge variant="outline" className="text-xs font-medium">
-                Live Data
+                Real-time Data
               </Badge>
               <Avatar className="w-7 h-7 ring-1 ring-gray-200">
                 <AvatarFallback className="bg-emerald-100 text-emerald-700 font-medium text-sm">
@@ -180,17 +146,28 @@ export const Analytics = ({ onBack, onLogout, onRegisterNew, user }: AnalyticsPr
         </header>
 
         {/* Analytics Content */}
-        <main className="flex-1 p-6 bg-gray-50/40 overflow-y-auto">
-          <div className="space-y-6">
-            {/* Interactive Chart */}
-            <ChartLineInteractive />
-            
-            {/* Charts Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <ChartLineDefault />
-              <ChartLineLinear />
-              <ChartLineStep />
-              <ChartLineMultiple />
+        <main className="flex-1 p-5 bg-gray-50/40">
+          <div className="text-center py-20">
+            <div className="max-w-md mx-auto">
+              <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <BarChart3 className="w-8 h-8 text-emerald-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Analytics Dashboard</h2>
+              <p className="text-gray-600 mb-8">
+                Analytics features will be implemented when metrics endpoints are available.
+                Currently integrating with your transaction and profile APIs.
+              </p>
+              <div className="space-y-3">
+                <Card className="p-4 text-left">
+                  <h3 className="font-semibold text-gray-900 mb-2">Available Data Sources:</h3>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>• Profile data from /profiles endpoints</li>
+                    <li>• Transaction data from /transactions endpoints</li>
+                    <li>• Real-time supply chain events</li>
+                    <li>• Custom analytics (when implemented)</li>
+                  </ul>
+                </Card>
+              </div>
             </div>
           </div>
         </main>
