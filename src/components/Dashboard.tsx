@@ -22,7 +22,7 @@ import {
   Package,
   Shield,
 } from "lucide-react";
-import { ProfileCreation } from "./ProfileCreation";
+import { ProfileCreation } from "./profile-creation";
 
 interface User {
   id: string;

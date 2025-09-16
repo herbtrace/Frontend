@@ -37,14 +37,14 @@ interface Location {
 
 interface FarmerProfile {
   role: 'farmer';
-  farmer_id?: string;
+  farmer_id: string;
   name: string;
   phone_number: string;
   location: Location;
   land_records?: string;
   certifications?: string[];
   registered_crops?: string[];
-  aadhar_number: string;
+  aadhar_number?: string;
 }
 
 interface WildCollectorProfile {
