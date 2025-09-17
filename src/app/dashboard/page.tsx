@@ -4,10 +4,14 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [selectedRole, setSelectedRole] = useState('');
+  const [currentStep, setCurrentStep] = useState(1);
 
   const sidebarItems = [
     {
@@ -19,6 +23,18 @@ export default function Dashboard() {
           <rect x="14" y="3" width="7" height="7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           <rect x="14" y="14" width="7" height="7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           <rect x="3" y="14" width="7" height="7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      ),
+    },
+    {
+      id: 'create-profile',
+      label: 'Create Profile',
+      icon: (
+        <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <circle cx="9" cy="7" r="4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <line x1="19" y1="8" x2="19" y2="14" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <line x1="22" y1="11" x2="16" y2="11" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       ),
     },
@@ -125,6 +141,232 @@ export default function Dashboard() {
             </div>
           </div>
         );
+
+      case 'create-profile':
+        const roles = [
+          { id: 'farmer', name: 'Farmer', icon: '🌱', desc: 'Agricultural producers' },
+          { id: 'wild_collector', name: 'Wild Collector', icon: '🌿', desc: 'Wild plant collectors' },
+          { id: 'processor', name: 'Processor', icon: '🏭', desc: 'Processing facilities' },
+          { id: 'laboratory', name: 'Laboratory', icon: '🔬', desc: 'Testing laboratories' },
+          { id: 'manufacturer', name: 'Manufacturer', icon: '⚙️', desc: 'Manufacturing units' },
+          { id: 'packer', name: 'Packer', icon: '📦', desc: 'Packaging facilities' },
+          { id: 'storage', name: 'Storage', icon: '🏪', desc: 'Storage facilities' }
+        ];
+
+        if (currentStep === 1) {
+          return (
+            <div className="h-full flex flex-col">
+              <div className="mb-8">
+                <h2 className="text-3xl font-light text-black mb-2">Create Profile</h2>
+                <p className="text-gray-600 font-light">
+                  Join the Herbtrace supply chain network
+                </p>
+              </div>
+
+              <div className="flex-1 flex items-center justify-center">
+                <div className="w-full max-w-4xl">
+                  <div className="text-center mb-8">
+                    <h3 className="text-xl font-medium text-black mb-2">Select Your Role</h3>
+                    <p className="text-gray-600 font-light">Choose the role that best describes your organization</p>
+                  </div>
+
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    {roles.map((role) => (
+                      <button
+                        key={role.id}
+                        onClick={() => {
+                          setSelectedRole(role.id);
+                          setCurrentStep(2);
+                        }}
+                        className={`p-6 bg-white border-2 rounded-lg transition-all hover:border-green-600 hover:shadow-md ${
+                          selectedRole === role.id ? 'border-green-600 bg-green-50' : 'border-gray-200'
+                        }`}
+                      >
+                        <div className="text-4xl mb-3">{role.icon}</div>
+                        <h4 className="font-medium text-black mb-1">{role.name}</h4>
+                        <p className="text-sm text-gray-600 font-light">{role.desc}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        if (currentStep === 2 && selectedRole) {
+          const getRoleForm = () => {
+            switch (selectedRole) {
+              case 'farmer':
+                return (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-black">Full Name</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Enter full name" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-black">Phone Number</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Enter phone number" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-black">Aadhar Number</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Enter Aadhar number" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-black">Land Records</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Land record details" />
+                    </div>
+                    <div className="space-y-2 lg:col-span-2">
+                      <Label className="text-sm font-medium text-black">Address</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Complete address" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-black">Latitude</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="0.0000" type="number" step="any" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-black">Longitude</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="0.0000" type="number" step="any" />
+                    </div>
+                  </div>
+                );
+
+              case 'wild_collector':
+                return (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-black">Full Name</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Enter full name" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-black">Phone Number</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Enter phone number" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-black">Company Email</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="company@example.com" type="email" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-black">License Number</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="License number" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-black">Area Assigned</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Assigned collection area" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-black">Address</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Complete address" />
+                    </div>
+                  </div>
+                );
+
+              case 'laboratory':
+                return (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-black">Company Name</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Laboratory name" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-black">Phone Number</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Phone number" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-black">Company Email</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="lab@example.com" type="email" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-black">Accreditation Number</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Accreditation number" />
+                    </div>
+                    <div className="space-y-2 lg:col-span-2">
+                      <Label className="text-sm font-medium text-black">Location</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Laboratory location" />
+                    </div>
+                  </div>
+                );
+
+              default:
+                return (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-black">Company Name</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Company name" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-black">Phone Number</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Phone number" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-black">Company Email</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="company@example.com" type="email" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-black">License Number</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="License number" />
+                    </div>
+                    <div className="space-y-2 lg:col-span-2">
+                      <Label className="text-sm font-medium text-black">Address</Label>
+                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Complete address" />
+                    </div>
+                  </div>
+                );
+            }
+          };
+
+          const selectedRoleData = roles.find(r => r.id === selectedRole);
+
+          return (
+            <div className="h-full flex flex-col">
+              <div className="mb-6">
+                <button
+                  onClick={() => setCurrentStep(1)}
+                  className="flex items-center text-gray-600 hover:text-black transition-colors mb-4"
+                >
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                  </svg>
+                  Back to Role Selection
+                </button>
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="text-3xl">{selectedRoleData?.icon}</div>
+                  <div>
+                    <h2 className="text-2xl font-light text-black">{selectedRoleData?.name} Profile</h2>
+                    <p className="text-gray-600 font-light">{selectedRoleData?.desc}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex-1 flex items-center justify-center">
+                <div className="w-full max-w-4xl bg-white border border-gray-200 rounded-lg p-8">
+                  <form className="space-y-6">
+                    {getRoleForm()}
+
+                    <div className="flex justify-between pt-6 border-t border-gray-200">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setCurrentStep(1)}
+                        className="border-gray-300 hover:bg-gray-50 px-6"
+                      >
+                        Back
+                      </Button>
+                      <Button
+                        type="submit"
+                        className="bg-green-600 hover:bg-green-700 text-white px-8"
+                      >
+                        Create {selectedRoleData?.name} Profile
+                      </Button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        return null;
 
       default:
         return (
