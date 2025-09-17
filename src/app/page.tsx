@@ -4,9 +4,21 @@ import { Button } from '@/components/ui/button';
 
 function HomeContent() {
   return (
-    <div className='min-h-screen bg-white'>
+    <div className='min-h-screen w-full bg-white relative text-gray-800'>
+      {/* Zigzag Lightning - Light Pattern */}
+      <div
+        className='absolute inset-0 z-0 pointer-events-none'
+        style={{
+          backgroundImage: `
+            repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(75, 85, 99, 0.08) 20px, rgba(75, 85, 99, 0.08) 21px),
+            repeating-linear-gradient(90deg, transparent, transparent 30px, rgba(107, 114, 128, 0.06) 30px, rgba(107, 114, 128, 0.06) 31px),
+            repeating-linear-gradient(60deg, transparent, transparent 40px, rgba(55, 65, 81, 0.05) 40px, rgba(55, 65, 81, 0.05) 41px),
+            repeating-linear-gradient(150deg, transparent, transparent 35px, rgba(31, 41, 55, 0.04) 35px, rgba(31, 41, 55, 0.04) 36px)
+          `,
+        }}
+      />
       {/* Navigation */}
-      <nav>
+      <nav className='relative z-10'>
         <div className='flex h-16 items-center px-6'>
           <div className='flex items-center space-x-3'>
             <Image
@@ -22,7 +34,7 @@ function HomeContent() {
       </nav>
 
       {/* Main Content - Centered */}
-      <div className='flex items-center justify-center min-h-[calc(100vh-4rem)]'>
+      <div className='flex items-center justify-center min-h-[calc(100vh-4rem)] relative z-10'>
         <div className='max-w-7xl mx-auto px-6 py-8'>
           <div className='grid lg:grid-cols-2 gap-16 items-center'>
             {/* Content */}
