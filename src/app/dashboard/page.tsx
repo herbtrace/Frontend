@@ -199,117 +199,360 @@ export default function Dashboard() {
             switch (selectedRole) {
               case 'farmer':
                 return (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-black">Full Name</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Enter full name" />
+                  <div className="space-y-4">
+                    {/* Required Fields */}
+                    <div className="space-y-3">
+                      <h4 className="text-base font-medium text-black border-b border-gray-200 pb-1">Required Information</h4>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Full Name *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Enter full name" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Phone Number *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Enter phone number" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Aadhar Number *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Enter Aadhar number" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Profile ID</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Optional profile ID" />
+                        </div>
+                        <div className="space-y-1 lg:col-span-2">
+                          <Label className="text-sm font-medium text-black">Address *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Complete address" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Latitude *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="0.0000" type="number" step="any" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Longitude *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="0.0000" type="number" step="any" required />
+                        </div>
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-black">Phone Number</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Enter phone number" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-black">Aadhar Number</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Enter Aadhar number" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-black">Land Records</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Land record details" />
-                    </div>
-                    <div className="space-y-2 lg:col-span-2">
-                      <Label className="text-sm font-medium text-black">Address</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Complete address" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-black">Latitude</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="0.0000" type="number" step="any" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-black">Longitude</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="0.0000" type="number" step="any" />
+
+                    {/* Optional Fields */}
+                    <div className="space-y-3">
+                      <h4 className="text-base font-medium text-black border-b border-gray-200 pb-1">Optional Information</h4>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Land Records</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Land record details" />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Certifications</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="e.g., Organic, GAP" />
+                          <p className="text-xs text-gray-500">Separate with commas</p>
+                        </div>
+                        <div className="space-y-1 lg:col-span-2">
+                          <Label className="text-sm font-medium text-black">Registered Crops</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="e.g., Ashwagandha, Turmeric, Tulsi" />
+                          <p className="text-xs text-gray-500">Separate with commas</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 );
 
               case 'wild_collector':
                 return (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-black">Full Name</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Enter full name" />
+                  <div className="space-y-4">
+                    {/* Required Fields */}
+                    <div className="space-y-3">
+                      <h4 className="text-base font-medium text-black border-b border-gray-200 pb-1">Required Information</h4>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Profile ID *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Enter unique profile ID" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Full Name *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Enter full name" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Phone Number *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Enter phone number" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Company Email *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="company@example.com" type="email" required />
+                        </div>
+                        <div className="space-y-1 lg:col-span-2">
+                          <Label className="text-sm font-medium text-black">Address *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Complete address" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Latitude *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="0.0000" type="number" step="any" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Longitude *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="0.0000" type="number" step="any" required />
+                        </div>
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-black">Phone Number</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Enter phone number" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-black">Company Email</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="company@example.com" type="email" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-black">License Number</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="License number" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-black">Area Assigned</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Assigned collection area" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-black">Address</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Complete address" />
+
+                    {/* Optional Fields */}
+                    <div className="space-y-3">
+                      <h4 className="text-base font-medium text-black border-b border-gray-200 pb-1">Optional Information</h4>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">License Number</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="License number" />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Area Assigned</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Assigned collection area" />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Certifications</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="e.g., Forest Department License" />
+                          <p className="text-xs text-gray-500">Separate with commas</p>
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Registered Species</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="e.g., Ashwagandha, Brahmi" />
+                          <p className="text-xs text-gray-500">Separate with commas</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 );
 
               case 'laboratory':
                 return (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-black">Company Name</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Laboratory name" />
+                  <div className="space-y-4">
+                    {/* Required Fields */}
+                    <div className="space-y-3">
+                      <h4 className="text-base font-medium text-black border-b border-gray-200 pb-1">Required Information</h4>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Profile ID *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Enter unique profile ID" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Company Name *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Laboratory name" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Phone Number *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Phone number" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Company Email *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="lab@example.com" type="email" required />
+                        </div>
+                        <div className="space-y-1 lg:col-span-2">
+                          <Label className="text-sm font-medium text-black">Location *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Laboratory location" required />
+                        </div>
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-black">Phone Number</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Phone number" />
+
+                    {/* Optional Fields */}
+                    <div className="space-y-3">
+                      <h4 className="text-base font-medium text-black border-b border-gray-200 pb-1">Optional Information</h4>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Accreditation Number</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Accreditation number" />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Test Capabilities</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="e.g., Heavy Metals, Pesticides" />
+                          <p className="text-xs text-gray-500">Separate with commas</p>
+                        </div>
+                        <div className="space-y-1 lg:col-span-2">
+                          <Label className="text-sm font-medium text-black">AYUSH Certificate</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="e.g., AYUSH-001, AYUSH-002" />
+                          <p className="text-xs text-gray-500">Separate with commas</p>
+                        </div>
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-black">Company Email</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="lab@example.com" type="email" />
+                  </div>
+                );
+
+              case 'processor':
+                return (
+                  <div className="space-y-4">
+                    {/* Required Fields */}
+                    <div className="space-y-3">
+                      <h4 className="text-base font-medium text-black border-b border-gray-200 pb-1">Required Information</h4>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Profile ID *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Enter unique profile ID" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Company Name *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Processing company name" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Authority Name *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Authorized person name" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Phone Number *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Phone number" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Company Email *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="company@example.com" type="email" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">License Number</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="License number" />
+                        </div>
+                        <div className="space-y-1 lg:col-span-2">
+                          <Label className="text-sm font-medium text-black">Address *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Complete address" required />
+                        </div>
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-black">Accreditation Number</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Accreditation number" />
+
+                    {/* Optional Fields */}
+                    <div className="space-y-3">
+                      <h4 className="text-base font-medium text-black border-b border-gray-200 pb-1">Optional Information</h4>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Responsible Person</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Responsible person name" />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Certification Status</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="e.g., ISO 22000, HACCP" />
+                          <p className="text-xs text-gray-500">Separate with commas</p>
+                        </div>
+                        <div className="space-y-1 lg:col-span-2">
+                          <Label className="text-sm font-medium text-black">Facilities</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="e.g., Drying, Grinding, Extraction" />
+                          <p className="text-xs text-gray-500">Separate with commas</p>
+                        </div>
+                      </div>
                     </div>
-                    <div className="space-y-2 lg:col-span-2">
-                      <Label className="text-sm font-medium text-black">Location</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Laboratory location" />
+                  </div>
+                );
+
+              case 'manufacturer':
+                return (
+                  <div className="space-y-4">
+                    {/* Required Fields */}
+                    <div className="space-y-3">
+                      <h4 className="text-base font-medium text-black border-b border-gray-200 pb-1">Required Information</h4>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Profile ID *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Enter unique profile ID" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Company Name *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Manufacturing company name" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Phone Number *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Phone number" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Company Email *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="company@example.com" type="email" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">License Number</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="License number" />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">GMP Certified</Label>
+                          <select className="w-full h-8 px-3 py-1 border border-gray-200 rounded-md focus:border-green-600 focus:ring-green-600 bg-transparent">
+                            <option value="">Select GMP Status</option>
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                          </select>
+                        </div>
+                        <div className="space-y-1 lg:col-span-2">
+                          <Label className="text-sm font-medium text-black">Address *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Complete address" required />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+
+              case 'packer':
+                return (
+                  <div className="space-y-4">
+                    {/* Required Fields */}
+                    <div className="space-y-3">
+                      <h4 className="text-base font-medium text-black border-b border-gray-200 pb-1">Required Information</h4>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Profile ID *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Enter unique profile ID" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Company Name *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Packing company name" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Phone Number *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Phone number" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Company Email *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="company@example.com" type="email" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">License Number</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="License number" />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Location</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Packing facility location" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+
+              case 'storage':
+                return (
+                  <div className="space-y-4">
+                    {/* Required Fields */}
+                    <div className="space-y-3">
+                      <h4 className="text-base font-medium text-black border-b border-gray-200 pb-1">Required Information</h4>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Profile ID *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Enter unique profile ID" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Facility Name *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Storage facility name" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Location *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="Storage facility location" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Company Email *</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="company@example.com" type="email" required />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-sm font-medium text-black">Certification Status</Label>
+                          <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600 h-8" placeholder="e.g., ISO 9001, FSSAI" />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 );
 
               default:
                 return (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-black">Company Name</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Company name" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-black">Phone Number</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Phone number" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-black">Company Email</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="company@example.com" type="email" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-black">License Number</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="License number" />
-                    </div>
-                    <div className="space-y-2 lg:col-span-2">
-                      <Label className="text-sm font-medium text-black">Address</Label>
-                      <Input className="border-gray-200 focus:border-green-600 focus:ring-green-600" placeholder="Complete address" />
-                    </div>
+                  <div className="text-center py-8">
+                    <p className="text-gray-600">Please select a valid role to continue.</p>
                   </div>
                 );
             }
@@ -339,11 +582,26 @@ export default function Dashboard() {
               </div>
 
               <div className="flex-1 flex items-center justify-center">
-                <div className="w-full max-w-4xl bg-white border border-gray-200 rounded-lg p-8">
-                  <form className="space-y-6">
+                <div className="w-full max-w-4xl bg-white border border-gray-200 rounded-lg p-6">
+                  <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="flex items-start space-x-2">
+                      <div className="w-4 h-4 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span className="text-white text-xs">ℹ</span>
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-medium text-green-800 mb-1">Profile Creation Guidelines</h4>
+                        <p className="text-xs text-green-700">
+                          Fields marked with <span className="font-medium">*</span> are required. 
+                          Optional fields can be filled later or left blank. 
+                          Array fields (like certifications) should be separated by commas.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <form className="space-y-4">
                     {getRoleForm()}
 
-                    <div className="flex justify-between pt-6 border-t border-gray-200">
+                    <div className="flex justify-between pt-4 border-t border-gray-200">
                       <Button
                         type="button"
                         variant="outline"
