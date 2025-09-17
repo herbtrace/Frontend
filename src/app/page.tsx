@@ -6,26 +6,23 @@ function HomeContent() {
   return (
     <div className='min-h-screen bg-white'>
       {/* Navigation */}
-      <nav className='border-b border-gray-100'>
-        <div className='flex h-14 items-center px-6'>
-          <div className='flex items-center space-x-2'>
+      <nav>
+        <div className='flex h-16 items-center px-6'>
+          <div className='flex items-center space-x-3'>
             <Image
               src='/logo.png'
               alt='Herbtrace'
-              width={20}
-              height={20}
-              className='w-5 h-5'
+              width={32}
+              height={32}
+              className='w-8 h-8'
             />
-            <span className='font-medium text-black'>Herbtrace</span>
-          </div>
-          <div className='ml-auto'>
-            <span className='text-sm text-gray-500'>Medicinal Herb Supply Chain</span>
+            <span className='text-xl font-semibold text-black'>Herbtrace</span>
           </div>
         </div>
       </nav>
 
       {/* Main Content - Centered */}
-      <div className='flex items-center justify-center min-h-[calc(100vh-3.5rem)]'>
+      <div className='flex items-center justify-center min-h-[calc(100vh-4rem)]'>
         <div className='max-w-7xl mx-auto px-6 py-8'>
           <div className='grid lg:grid-cols-2 gap-16 items-center'>
             {/* Content */}
