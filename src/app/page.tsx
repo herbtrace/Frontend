@@ -42,10 +42,15 @@ function HomeContent() {
               <div className='space-y-4'>
                 <h1 className='text-4xl lg:text-5xl font-light tracking-tight text-black leading-tight'>
                   Monitor every herb
-                  <span className='text-green-600 font-normal'> from seed to shelf</span>
+                  <span className='text-green-600 font-normal'>
+                    {' '}
+                    from seed to shelf
+                  </span>
                 </h1>
                 <p className='text-lg text-gray-600 font-light max-w-lg mx-auto lg:mx-0'>
-                  Complete traceability for medicinal herbs. Track cultivation, processing, testing, and distribution with blockchain verification.
+                  Complete traceability for medicinal herbs. Track cultivation,
+                  processing, testing, and distribution with blockchain
+                  verification.
                 </p>
               </div>
 
@@ -54,11 +59,14 @@ function HomeContent() {
                   <div className='flex items-start space-x-3 text-left'>
                     <div className='w-1 h-1 rounded-full bg-green-600 mt-2 flex-shrink-0'></div>
                     <div className='space-y-1'>
-                      <p className='font-medium text-black'>Farm-to-pharmacy tracking</p>
+                      <p className='font-medium text-black'>
+                        Farm-to-pharmacy tracking
+                      </p>
                       <p className='text-sm text-gray-600 font-light leading-relaxed'>
-                        Monitor herbs through cultivation, harvest, processing, and distribution.
-                        Track every batch from organic farms to certified processing facilities,
-                        ensuring complete visibility across the entire supply chain journey.
+                        Monitor herbs through cultivation, harvest, processing,
+                        and distribution. Track every batch from organic farms
+                        to certified processing facilities, ensuring complete
+                        visibility across the entire supply chain journey.
                       </p>
                     </div>
                   </div>
@@ -66,11 +74,14 @@ function HomeContent() {
                   <div className='flex items-start space-x-3 text-left'>
                     <div className='w-1 h-1 rounded-full bg-green-600 mt-2 flex-shrink-0'></div>
                     <div className='space-y-1'>
-                      <p className='font-medium text-black'>Quality assurance protocols</p>
+                      <p className='font-medium text-black'>
+                        Quality assurance protocols
+                      </p>
                       <p className='text-sm text-gray-600 font-light leading-relaxed'>
-                        Automated quality checks, lab integrations, and compliance reporting.
-                        Real-time monitoring of temperature, humidity, contamination levels,
-                        and active compound concentrations throughout the supply chain.
+                        Automated quality checks, lab integrations, and
+                        compliance reporting. Real-time monitoring of
+                        temperature, humidity, contamination levels, and active
+                        compound concentrations throughout the supply chain.
                       </p>
                     </div>
                   </div>
@@ -78,11 +89,14 @@ function HomeContent() {
                   <div className='flex items-start space-x-3 text-left'>
                     <div className='w-1 h-1 rounded-full bg-green-600 mt-2 flex-shrink-0'></div>
                     <div className='space-y-1'>
-                      <p className='font-medium text-black'>Blockchain verification</p>
+                      <p className='font-medium text-black'>
+                        Blockchain verification
+                      </p>
                       <p className='text-sm text-gray-600 font-light leading-relaxed'>
-                        Immutable records with cryptographic proof of authenticity.
-                        Every transaction, test result, and quality certificate is permanently
-                        recorded on the blockchain, preventing fraud and ensuring transparency.
+                        Immutable records with cryptographic proof of
+                        authenticity. Every transaction, test result, and
+                        quality certificate is permanently recorded on the
+                        blockchain, preventing fraud and ensuring transparency.
                       </p>
                     </div>
                   </div>
@@ -108,7 +122,9 @@ function HomeContent() {
                 <div className='flex items-center justify-between'>
                   <div className='flex items-center space-x-2'>
                     <div className='w-2 h-2 rounded-full bg-green-600'></div>
-                    <h3 className='font-medium text-black'>Supply Chain Dashboard</h3>
+                    <h3 className='font-medium text-black'>
+                      Supply Chain Dashboard
+                    </h3>
                   </div>
                   <div className='text-xs text-gray-500'>Live updates</div>
                 </div>
@@ -123,7 +139,9 @@ function HomeContent() {
                     <div className='text-xs text-gray-600'>Active Lots</div>
                   </div>
                   <div className='border border-gray-200 rounded p-3 text-center'>
-                    <div className='text-xl font-semibold text-black'>96.8%</div>
+                    <div className='text-xl font-semibold text-black'>
+                      96.8%
+                    </div>
                     <div className='text-xs text-gray-600'>Pass Rate</div>
                   </div>
                   <div className='border border-gray-200 rounded p-3 text-center'>
@@ -134,13 +152,19 @@ function HomeContent() {
 
                 {/* Activity Feed */}
                 <div className='space-y-3'>
-                  <h4 className='text-sm font-medium text-black'>Recent Activity</h4>
+                  <h4 className='text-sm font-medium text-black'>
+                    Recent Activity
+                  </h4>
                   <div className='space-y-2'>
                     <div className='flex items-center space-x-3 border border-gray-200 rounded p-3'>
                       <div className='w-2 h-2 rounded-full bg-green-600'></div>
                       <div className='flex-1'>
-                        <div className='text-sm font-medium text-black'>Ashwagandha Lot #AS847</div>
-                        <div className='text-xs text-gray-600'>Quality verification completed</div>
+                        <div className='text-sm font-medium text-black'>
+                          Ashwagandha Lot #AS847
+                        </div>
+                        <div className='text-xs text-gray-600'>
+                          Quality verification completed
+                        </div>
                       </div>
                       <div className='text-xs text-gray-500'>2m ago</div>
                     </div>
@@ -148,8 +172,12 @@ function HomeContent() {
                     <div className='flex items-center space-x-3 border border-gray-200 rounded p-3'>
                       <div className='w-2 h-2 rounded-full bg-black'></div>
                       <div className='flex-1'>
-                        <div className='text-sm font-medium text-black'>Turmeric Lot #TU293</div>
-                        <div className='text-xs text-gray-600'>Shipped to processing facility</div>
+                        <div className='text-sm font-medium text-black'>
+                          Turmeric Lot #TU293
+                        </div>
+                        <div className='text-xs text-gray-600'>
+                          Shipped to processing facility
+                        </div>
                       </div>
                       <div className='text-xs text-gray-500'>8m ago</div>
                     </div>
@@ -157,8 +185,12 @@ function HomeContent() {
                     <div className='flex items-center space-x-3 border border-gray-200 rounded p-3'>
                       <div className='w-2 h-2 rounded-full bg-green-600'></div>
                       <div className='flex-1'>
-                        <div className='text-sm font-medium text-black'>Ginseng Lot #GS142</div>
-                        <div className='text-xs text-gray-600'>Lab analysis in progress</div>
+                        <div className='text-sm font-medium text-black'>
+                          Ginseng Lot #GS142
+                        </div>
+                        <div className='text-xs text-gray-600'>
+                          Lab analysis in progress
+                        </div>
                       </div>
                       <div className='text-xs text-gray-500'>15m ago</div>
                     </div>
@@ -168,20 +200,52 @@ function HomeContent() {
                 {/* Chart */}
                 <div className='space-y-3'>
                   <div className='flex items-center justify-between'>
-                    <h4 className='text-sm font-medium text-black'>Quality Score Trend</h4>
+                    <h4 className='text-sm font-medium text-black'>
+                      Quality Score Trend
+                    </h4>
                     <div className='text-xs text-gray-500'>Past 30 days</div>
                   </div>
                   <div className='h-16 flex items-end space-x-1'>
-                    <div className='bg-green-600 w-2 rounded-t' style={{height: '60%'}}></div>
-                    <div className='bg-green-600 w-2 rounded-t' style={{height: '75%'}}></div>
-                    <div className='bg-green-600 w-2 rounded-t' style={{height: '68%'}}></div>
-                    <div className='bg-green-600 w-2 rounded-t' style={{height: '82%'}}></div>
-                    <div className='bg-green-600 w-2 rounded-t' style={{height: '79%'}}></div>
-                    <div className='bg-green-600 w-2 rounded-t' style={{height: '87%'}}></div>
-                    <div className='bg-green-600 w-2 rounded-t' style={{height: '91%'}}></div>
-                    <div className='bg-green-600 w-2 rounded-t' style={{height: '88%'}}></div>
-                    <div className='bg-green-600 w-2 rounded-t' style={{height: '93%'}}></div>
-                    <div className='bg-green-600 w-2 rounded-t' style={{height: '96%'}}></div>
+                    <div
+                      className='bg-green-600 w-2 rounded-t'
+                      style={{ height: '60%' }}
+                    ></div>
+                    <div
+                      className='bg-green-600 w-2 rounded-t'
+                      style={{ height: '75%' }}
+                    ></div>
+                    <div
+                      className='bg-green-600 w-2 rounded-t'
+                      style={{ height: '68%' }}
+                    ></div>
+                    <div
+                      className='bg-green-600 w-2 rounded-t'
+                      style={{ height: '82%' }}
+                    ></div>
+                    <div
+                      className='bg-green-600 w-2 rounded-t'
+                      style={{ height: '79%' }}
+                    ></div>
+                    <div
+                      className='bg-green-600 w-2 rounded-t'
+                      style={{ height: '87%' }}
+                    ></div>
+                    <div
+                      className='bg-green-600 w-2 rounded-t'
+                      style={{ height: '91%' }}
+                    ></div>
+                    <div
+                      className='bg-green-600 w-2 rounded-t'
+                      style={{ height: '88%' }}
+                    ></div>
+                    <div
+                      className='bg-green-600 w-2 rounded-t'
+                      style={{ height: '93%' }}
+                    ></div>
+                    <div
+                      className='bg-green-600 w-2 rounded-t'
+                      style={{ height: '96%' }}
+                    ></div>
                   </div>
                 </div>
 

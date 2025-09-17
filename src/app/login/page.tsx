@@ -93,7 +93,10 @@ export default function LoginPage() {
 
               <form onSubmit={handleSubmit} className='space-y-6'>
                 <div className='space-y-2'>
-                  <Label htmlFor='email' className='text-sm font-medium text-black'>
+                  <Label
+                    htmlFor='email'
+                    className='text-sm font-medium text-black'
+                  >
                     Email Address
                   </Label>
                   <Input
@@ -108,7 +111,10 @@ export default function LoginPage() {
                 </div>
 
                 <div className='space-y-2'>
-                  <Label htmlFor='password' className='text-sm font-medium text-black'>
+                  <Label
+                    htmlFor='password'
+                    className='text-sm font-medium text-black'
+                  >
                     Password
                   </Label>
                   <Input
@@ -133,9 +139,12 @@ export default function LoginPage() {
 
               <div className='text-center'>
                 <div className='bg-gray-50 border border-gray-200 rounded-lg p-4'>
-                  <p className='text-sm text-gray-600 font-light mb-2'>Demo Credentials:</p>
+                  <p className='text-sm text-gray-600 font-light mb-2'>
+                    Demo Credentials:
+                  </p>
                   <p className='text-xs text-black font-medium'>
-                    Email: scm@example.com<br />
+                    Email: scm@example.com
+                    <br />
                     Password: scm@123
                   </p>
                 </div>
@@ -147,74 +156,274 @@ export default function LoginPage() {
               <div className='text-center space-y-6'>
                 {/* SVG Illustration */}
                 <div className='w-80 h-80 mx-auto'>
-                  <svg viewBox="0 0 400 400" className='w-full h-full'>
+                  <svg viewBox='0 0 400 400' className='w-full h-full'>
                     {/* Background Circle */}
-                    <circle cx="200" cy="200" r="180" fill="#f0fdf4" stroke="#16a34a" strokeWidth="2" opacity="0.3"/>
+                    <circle
+                      cx='200'
+                      cy='200'
+                      r='180'
+                      fill='#f0fdf4'
+                      stroke='#16a34a'
+                      strokeWidth='2'
+                      opacity='0.3'
+                    />
 
                     {/* Main Plant */}
-                    <g transform="translate(200,320)">
+                    <g transform='translate(200,320)'>
                       {/* Stem */}
-                      <line x1="0" y1="0" x2="0" y2="-80" stroke="#16a34a" strokeWidth="6" strokeLinecap="round"/>
+                      <line
+                        x1='0'
+                        y1='0'
+                        x2='0'
+                        y2='-80'
+                        stroke='#16a34a'
+                        strokeWidth='6'
+                        strokeLinecap='round'
+                      />
 
                       {/* Leaves */}
-                      <ellipse cx="-20" cy="-40" rx="15" ry="25" fill="#22c55e" transform="rotate(-30)"/>
-                      <ellipse cx="20" cy="-40" rx="15" ry="25" fill="#16a34a" transform="rotate(30)"/>
-                      <ellipse cx="-15" cy="-65" rx="12" ry="20" fill="#15803d" transform="rotate(-20)"/>
-                      <ellipse cx="15" cy="-65" rx="12" ry="20" fill="#22c55e" transform="rotate(20)"/>
+                      <ellipse
+                        cx='-20'
+                        cy='-40'
+                        rx='15'
+                        ry='25'
+                        fill='#22c55e'
+                        transform='rotate(-30)'
+                      />
+                      <ellipse
+                        cx='20'
+                        cy='-40'
+                        rx='15'
+                        ry='25'
+                        fill='#16a34a'
+                        transform='rotate(30)'
+                      />
+                      <ellipse
+                        cx='-15'
+                        cy='-65'
+                        rx='12'
+                        ry='20'
+                        fill='#15803d'
+                        transform='rotate(-20)'
+                      />
+                      <ellipse
+                        cx='15'
+                        cy='-65'
+                        rx='12'
+                        ry='20'
+                        fill='#22c55e'
+                        transform='rotate(20)'
+                      />
                     </g>
 
                     {/* Side Plants */}
-                    <g transform="translate(130,300)">
-                      <line x1="0" y1="0" x2="0" y2="-50" stroke="#16a34a" strokeWidth="4"/>
-                      <ellipse cx="-10" cy="-25" rx="8" ry="15" fill="#22c55e" transform="rotate(-25)"/>
-                      <ellipse cx="10" cy="-25" rx="8" ry="15" fill="#16a34a" transform="rotate(25)"/>
+                    <g transform='translate(130,300)'>
+                      <line
+                        x1='0'
+                        y1='0'
+                        x2='0'
+                        y2='-50'
+                        stroke='#16a34a'
+                        strokeWidth='4'
+                      />
+                      <ellipse
+                        cx='-10'
+                        cy='-25'
+                        rx='8'
+                        ry='15'
+                        fill='#22c55e'
+                        transform='rotate(-25)'
+                      />
+                      <ellipse
+                        cx='10'
+                        cy='-25'
+                        rx='8'
+                        ry='15'
+                        fill='#16a34a'
+                        transform='rotate(25)'
+                      />
                     </g>
 
-                    <g transform="translate(270,310)">
-                      <line x1="0" y1="0" x2="0" y2="-60" stroke="#16a34a" strokeWidth="4"/>
-                      <ellipse cx="-12" cy="-30" rx="10" ry="18" fill="#15803d" transform="rotate(-30)"/>
-                      <ellipse cx="12" cy="-30" rx="10" ry="18" fill="#22c55e" transform="rotate(30)"/>
+                    <g transform='translate(270,310)'>
+                      <line
+                        x1='0'
+                        y1='0'
+                        x2='0'
+                        y2='-60'
+                        stroke='#16a34a'
+                        strokeWidth='4'
+                      />
+                      <ellipse
+                        cx='-12'
+                        cy='-30'
+                        rx='10'
+                        ry='18'
+                        fill='#15803d'
+                        transform='rotate(-30)'
+                      />
+                      <ellipse
+                        cx='12'
+                        cy='-30'
+                        rx='10'
+                        ry='18'
+                        fill='#22c55e'
+                        transform='rotate(30)'
+                      />
                     </g>
 
                     {/* Blockchain Network Lines */}
-                    <g opacity="0.6">
-                      <line x1="100" y1="150" x2="300" y2="150" stroke="#16a34a" strokeWidth="2" strokeDasharray="5,5"/>
-                      <line x1="120" y1="120" x2="280" y2="180" stroke="#16a34a" strokeWidth="2" strokeDasharray="5,5"/>
-                      <line x1="120" y1="180" x2="280" y2="120" stroke="#16a34a" strokeWidth="2" strokeDasharray="5,5"/>
+                    <g opacity='0.6'>
+                      <line
+                        x1='100'
+                        y1='150'
+                        x2='300'
+                        y2='150'
+                        stroke='#16a34a'
+                        strokeWidth='2'
+                        strokeDasharray='5,5'
+                      />
+                      <line
+                        x1='120'
+                        y1='120'
+                        x2='280'
+                        y2='180'
+                        stroke='#16a34a'
+                        strokeWidth='2'
+                        strokeDasharray='5,5'
+                      />
+                      <line
+                        x1='120'
+                        y1='180'
+                        x2='280'
+                        y2='120'
+                        stroke='#16a34a'
+                        strokeWidth='2'
+                        strokeDasharray='5,5'
+                      />
                     </g>
 
                     {/* Network Nodes */}
-                    <circle cx="100" cy="120" r="8" fill="#16a34a"/>
-                    <circle cx="300" cy="120" r="8" fill="#16a34a"/>
-                    <circle cx="100" cy="180" r="8" fill="#16a34a"/>
-                    <circle cx="300" cy="180" r="8" fill="#16a34a"/>
-                    <circle cx="200" cy="100" r="10" fill="#22c55e"/>
+                    <circle cx='100' cy='120' r='8' fill='#16a34a' />
+                    <circle cx='300' cy='120' r='8' fill='#16a34a' />
+                    <circle cx='100' cy='180' r='8' fill='#16a34a' />
+                    <circle cx='300' cy='180' r='8' fill='#16a34a' />
+                    <circle cx='200' cy='100' r='10' fill='#22c55e' />
 
                     {/* Icons */}
-                    <g transform="translate(90,110)">
-                      <rect x="-8" y="-8" width="16" height="16" fill="#ffffff" stroke="#16a34a" strokeWidth="2" rx="2"/>
-                      <text x="0" y="3" textAnchor="middle" fill="#16a34a" fontSize="10" fontWeight="bold">🌱</text>
+                    <g transform='translate(90,110)'>
+                      <rect
+                        x='-8'
+                        y='-8'
+                        width='16'
+                        height='16'
+                        fill='#ffffff'
+                        stroke='#16a34a'
+                        strokeWidth='2'
+                        rx='2'
+                      />
+                      <text
+                        x='0'
+                        y='3'
+                        textAnchor='middle'
+                        fill='#16a34a'
+                        fontSize='10'
+                        fontWeight='bold'
+                      >
+                        🌱
+                      </text>
                     </g>
 
-                    <g transform="translate(290,110)">
-                      <rect x="-8" y="-8" width="16" height="16" fill="#ffffff" stroke="#16a34a" strokeWidth="2" rx="2"/>
-                      <text x="0" y="3" textAnchor="middle" fill="#16a34a" fontSize="10" fontWeight="bold">🏭</text>
+                    <g transform='translate(290,110)'>
+                      <rect
+                        x='-8'
+                        y='-8'
+                        width='16'
+                        height='16'
+                        fill='#ffffff'
+                        stroke='#16a34a'
+                        strokeWidth='2'
+                        rx='2'
+                      />
+                      <text
+                        x='0'
+                        y='3'
+                        textAnchor='middle'
+                        fill='#16a34a'
+                        fontSize='10'
+                        fontWeight='bold'
+                      >
+                        🏭
+                      </text>
                     </g>
 
-                    <g transform="translate(90,170)">
-                      <rect x="-8" y="-8" width="16" height="16" fill="#ffffff" stroke="#16a34a" strokeWidth="2" rx="2"/>
-                      <text x="0" y="3" textAnchor="middle" fill="#16a34a" fontSize="10" fontWeight="bold">🔬</text>
+                    <g transform='translate(90,170)'>
+                      <rect
+                        x='-8'
+                        y='-8'
+                        width='16'
+                        height='16'
+                        fill='#ffffff'
+                        stroke='#16a34a'
+                        strokeWidth='2'
+                        rx='2'
+                      />
+                      <text
+                        x='0'
+                        y='3'
+                        textAnchor='middle'
+                        fill='#16a34a'
+                        fontSize='10'
+                        fontWeight='bold'
+                      >
+                        🔬
+                      </text>
                     </g>
 
-                    <g transform="translate(290,170)">
-                      <rect x="-8" y="-8" width="16" height="16" fill="#ffffff" stroke="#16a34a" strokeWidth="2" rx="2"/>
-                      <text x="0" y="3" textAnchor="middle" fill="#16a34a" fontSize="10" fontWeight="bold">🏥</text>
+                    <g transform='translate(290,170)'>
+                      <rect
+                        x='-8'
+                        y='-8'
+                        width='16'
+                        height='16'
+                        fill='#ffffff'
+                        stroke='#16a34a'
+                        strokeWidth='2'
+                        rx='2'
+                      />
+                      <text
+                        x='0'
+                        y='3'
+                        textAnchor='middle'
+                        fill='#16a34a'
+                        fontSize='10'
+                        fontWeight='bold'
+                      >
+                        🏥
+                      </text>
                     </g>
 
                     {/* Central Blockchain Symbol */}
-                    <g transform="translate(190,90)">
-                      <rect x="-8" y="-8" width="16" height="16" fill="#ffffff" stroke="#22c55e" strokeWidth="2" rx="2"/>
-                      <text x="0" y="3" textAnchor="middle" fill="#22c55e" fontSize="8" fontWeight="bold">⛓️</text>
+                    <g transform='translate(190,90)'>
+                      <rect
+                        x='-8'
+                        y='-8'
+                        width='16'
+                        height='16'
+                        fill='#ffffff'
+                        stroke='#22c55e'
+                        strokeWidth='2'
+                        rx='2'
+                      />
+                      <text
+                        x='0'
+                        y='3'
+                        textAnchor='middle'
+                        fill='#22c55e'
+                        fontSize='8'
+                        fontWeight='bold'
+                      >
+                        ⛓️
+                      </text>
                     </g>
                   </svg>
                 </div>
@@ -225,8 +434,9 @@ export default function LoginPage() {
                     Secure Supply Chain
                   </h3>
                   <p className='text-gray-600 font-light leading-relaxed max-w-sm mx-auto'>
-                    Track medicinal herbs through every stage from organic farms to processing facilities,
-                    laboratories, and healthcare providers all secured by blockchain technology.
+                    Track medicinal herbs through every stage from organic farms
+                    to processing facilities, laboratories, and healthcare
+                    providers all secured by blockchain technology.
                   </p>
 
                   <div className='flex items-center justify-center space-x-6 pt-4'>
@@ -234,21 +444,27 @@ export default function LoginPage() {
                       <div className='w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-1'>
                         <span className='text-green-600 text-sm'>🌱</span>
                       </div>
-                      <div className='text-xs text-gray-600 font-light'>Farm</div>
+                      <div className='text-xs text-gray-600 font-light'>
+                        Farm
+                      </div>
                     </div>
                     <div className='w-4 h-px bg-gray-300'></div>
                     <div className='text-center'>
                       <div className='w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-1'>
                         <span className='text-green-600 text-sm'>🔬</span>
                       </div>
-                      <div className='text-xs text-gray-600 font-light'>Lab</div>
+                      <div className='text-xs text-gray-600 font-light'>
+                        Lab
+                      </div>
                     </div>
                     <div className='w-4 h-px bg-gray-300'></div>
                     <div className='text-center'>
                       <div className='w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-1'>
                         <span className='text-green-600 text-sm'>🏥</span>
                       </div>
-                      <div className='text-xs text-gray-600 font-light'>Pharmacy</div>
+                      <div className='text-xs text-gray-600 font-light'>
+                        Pharmacy
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -243,6 +243,34 @@ export class ApiService {
     });
   }
 
+  static async getAllProfiles(): Promise<ProfileData[]> {
+    return this.makeRequest<ProfileData[]>('/profiles/get', {
+      method: 'GET',
+    });
+  }
+
+  static async getProfileById(id: string): Promise<ProfileData> {
+    return this.makeRequest<ProfileData>(`/profiles/${id}`, {
+      method: 'GET',
+    });
+  }
+
+  static async updateProfile(
+    id: string,
+    profileData: Partial<ProfileData>
+  ): Promise<ProfileCreateResponse> {
+    return this.makeRequest<ProfileCreateResponse>(`/profiles/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(profileData),
+    });
+  }
+
+  static async deleteProfile(id: string): Promise<{ message: string }> {
+    return this.makeRequest<{ message: string }>(`/profiles/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
   static async loginSCM(
     email: string,
     password: string
