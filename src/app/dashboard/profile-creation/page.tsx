@@ -1,24 +1,64 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  LayoutGrid,
+  Users,
+  UserPlus,
+  ChevronLeft,
+  LogOut,
+  ArrowLeft,
+  CheckCircle,
+  Loader2
+} from 'lucide-react';
+import { toast } from 'sonner';
+import { ApiService, type ProfileData } from '@/services/api';
 
 export default function ProfileCreation() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [selectedRole, setSelectedRole] = useState('');
+  const [selectedRole, setSelectedRole] = useState<ProfileData['role'] | ''>('');
   const [currentStep, setCurrentStep] = useState(1);
+  const [formData, setFormData] = useState<Record<string, any>>({
+    name: '',
+    phone_number: '',
+    aadhar_number: '',
+    profile_id: '',
+    address: '',
+    latitude: '',
+    longitude: '',
+    land_records: '',
+    certifications: '',
+    registered_crops: '',
+    company_email: '',
+    company_name: '',
+    authority_name: '',
+    license_no: '',
+    responsible_person: '',
+    certification_status: '',
+    facilities: '',
+    location: '',
+    accreditation_no: '',
+    test_capabilities: '',
+    ayush_certificate: '',
+    gmp_certified: '',
+    facility_name: '',
+    area_assigned: '',
+    registered_species: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Initialize state from URL parameters on component mount
   useEffect(() => {
-    const role = searchParams.get('role');
+    const role = searchParams.get('role') as ProfileData['role'] | null;
     const step = searchParams.get('step');
 
     if (role) {
@@ -29,8 +69,8 @@ export default function ProfileCreation() {
     }
   }, [searchParams]);
 
-  // Update URL when state changes
-  const updateURL = (newRole?: string, newStep?: number) => {
+  // Debounced URL update to prevent flickering
+  const updateURL = useCallback((newRole?: string, newStep?: number) => {
     const params = new URLSearchParams();
 
     const role = newRole || selectedRole;
@@ -48,158 +88,212 @@ export default function ProfileCreation() {
       ? `/dashboard/profile-creation?${queryString}`
       : '/dashboard/profile-creation';
 
-    router.replace(newURL, { scroll: false });
-  };
+    // Use requestAnimationFrame to prevent flickering
+    requestAnimationFrame(() => {
+      router.replace(newURL, { scroll: false });
+    });
+  }, [selectedRole, currentStep, router]);
 
-  // Enhanced state setters that also update URL
-  const setSelectedRoleWithURL = (role: string) => {
+  // Enhanced state setters with smooth transitions
+  const setSelectedRoleWithURL = useCallback((role: ProfileData['role']) => {
     setSelectedRole(role);
     updateURL(role);
-  };
+  }, [updateURL]);
 
-  const setCurrentStepWithURL = (step: number) => {
+  const setCurrentStepWithURL = useCallback((step: number) => {
     setCurrentStep(step);
     updateURL(undefined, step);
+  }, [updateURL]);
+
+  // Select role and step atomically to avoid URL race conditions
+  const selectRoleAndProceed = useCallback((roleId: ProfileData['role']) => {
+    setSelectedRole(roleId);
+    setCurrentStep(2);
+    updateURL(roleId, 2);
+  }, [updateURL]);
+
+  const handleInputChange = useCallback((field: string, value: any) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value || '' // Ensure value is never undefined
+    }));
+  }, []);
+
+  // Helper function to get safe input value
+  const getInputValue = (field: string) => formData[field] || '';
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      // Transform form data to match API format
+      const profileData = transformFormDataToAPI(
+        formData,
+        selectedRole as ProfileData['role']
+      );
+
+      // Create profile via API
+      const response = await ApiService.createProfile(profileData);
+
+      // Show success toast
+      toast.success('Profile Created Successfully!', {
+        description: `${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)} profile has been created and is pending approval.`,
+        duration: 4000,
+        action: {
+          label: 'View Profiles',
+          onClick: () => router.push('/dashboard/profiles')
+        }
+      });
+
+      // Reset form and redirect
+      setFormData({});
+      setSelectedRole('');
+      setCurrentStep(1);
+
+      // Redirect to profiles page after a short delay
+      setTimeout(() => {
+        router.push('/dashboard/profiles');
+      }, 2000);
+
+    } catch (error) {
+      console.error('Profile creation failed:', error);
+      toast.error('Profile Creation Failed', {
+        description: 'There was an error creating your profile. Please try again.',
+        duration: 4000
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const sidebarItems = [
+  const transformFormDataToAPI = (
+    data: Record<string, any>,
+    role: ProfileData['role']
+  ): ProfileData => {
+    // Transform based on exact backend API schema requirements
+    switch (role) {
+      case 'farmer':
+        return {
+          role: 'farmer',
+          profile_id: data.profile_id || `FARMER-${Date.now()}`,
+          name: data.name || '',
+          phone_number: data.phone_number || '',
+          location: {
+            lat: parseFloat(data.latitude || '0'),
+            long: parseFloat(data.longitude || '0'),
+            address: data.address || ''
+          },
+          land_records: data.land_records || '',
+          certifications: data.certifications ? data.certifications.split(',').map((s: string) => s.trim()) : [],
+          registered_crops: data.registered_crops ? data.registered_crops.split(',').map((s: string) => s.trim()) : [],
+          aadhar_number: data.aadhar_number || ''
+        };
+
+      case 'wild_collector':
+        return {
+          role: 'wild_collector',
+          profile_id: data.profile_id || `WC-${Date.now()}`,
+          name: data.name || '',
+          phone_number: data.phone_number || '',
+          location: {
+            lat: parseFloat(data.latitude || '0'),
+            long: parseFloat(data.longitude || '0'),
+            address: data.address || ''
+          },
+          license_no: data.license_no || '',
+          area_assigned: data.area_assigned || '',
+          certifications: data.certifications ? data.certifications.split(',').map((s: string) => s.trim()) : [],
+          company_email: data.company_email || '',
+          registered_species: data.registered_species ? data.registered_species.split(',').map((s: string) => s.trim()) : []
+        };
+
+      case 'processor':
+        return {
+          role: 'processor',
+          profile_id: data.profile_id || `PR-${Date.now()}`,
+          company_name: data.company_name || '',
+          authority_name: data.authority_name || '',
+          address: data.address || '',
+          license_no: data.license_no || '',
+          responsible_person: data.responsible_person || '',
+          certification_status: data.certification_status ? data.certification_status.split(',').map((s: string) => s.trim()) : [],
+          facilities: data.facilities ? data.facilities.split(',').map((s: string) => s.trim()) : [],
+          company_email: data.company_email || '',
+          phone_number: data.phone_number || ''
+        };
+
+      case 'laboratory':
+        return {
+          role: 'laboratory',
+          profile_id: data.profile_id || `LAB-${Date.now()}`,
+          company_name: data.company_name || '',
+          location: data.location || '',
+          accreditation_no: data.accreditation_no || '',
+          test_capabilities: data.test_capabilities ? data.test_capabilities.split(',').map((s: string) => s.trim()) : [],
+          company_email: data.company_email || '',
+          ayush_certificate: data.ayush_certificate ? data.ayush_certificate.split(',').map((s: string) => s.trim()) : [],
+          phone_number: data.phone_number || ''
+        };
+
+      case 'manufacturer':
+        return {
+          role: 'manufacturer',
+          profile_id: data.profile_id || `MFG-${Date.now()}`,
+          name: data.name || '',
+          address: data.address || '',
+          license_no: data.license_no || '',
+          GMP_certified: data.gmp_certified === 'true',
+          company_email: data.company_email || '',
+          phone_number: data.phone_number || ''
+        };
+
+      case 'packer':
+        return {
+          role: 'packer',
+          profile_id: data.profile_id || `PKR-${Date.now()}`,
+          name: data.name || '',
+          lic_no: data.license_no || '',
+          location: data.location || '',
+          phone_number: data.phone_number || '',
+          company_email: data.company_email || ''
+        };
+
+      case 'storage':
+        return {
+          role: 'storage',
+          profile_id: data.profile_id || `STR-${Date.now()}`,
+          facility_name: data.facility_name || '',
+          location: data.location || '',
+          cert_status: data.certification_status || '',
+          company_email: data.company_email || ''
+        };
+
+      default:
+        throw new Error('Unsupported role');
+    }
+  };
+
+  const sidebarItems = useMemo(() => [
     {
       id: 'overview',
       label: 'Overview',
       href: '/dashboard/overview',
-      icon: (
-        <svg
-          className='w-full h-full'
-          fill='none'
-          stroke='currentColor'
-          viewBox='0 0 24 24'
-        >
-          <rect
-            x='3'
-            y='3'
-            width='7'
-            height='7'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-          <rect
-            x='14'
-            y='3'
-            width='7'
-            height='7'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-          <rect
-            x='14'
-            y='14'
-            width='7'
-            height='7'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-          <rect
-            x='3'
-            y='14'
-            width='7'
-            height='7'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-        </svg>
-      ),
+      icon: LayoutGrid,
     },
     {
       id: 'profiles',
       label: 'All Profiles',
       href: '/dashboard/profiles',
-      icon: (
-        <svg
-          className='w-full h-full'
-          fill='none'
-          stroke='currentColor'
-          viewBox='0 0 24 24'
-        >
-          <path
-            d='M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-          <circle
-            cx='9'
-            cy='7'
-            r='4'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-          <path
-            d='M23 21v-2a4 4 0 0 0-3-3.87'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-          <path
-            d='M16 3.13a4 4 0 0 1 0 7.75'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-        </svg>
-      ),
+      icon: Users,
     },
     {
       id: 'create-profile',
       label: 'Create Profile',
       href: '/dashboard/profile-creation',
-      icon: (
-        <svg
-          className='w-full h-full'
-          fill='none'
-          stroke='currentColor'
-          viewBox='0 0 24 24'
-        >
-          <path
-            d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-          <circle
-            cx='9'
-            cy='7'
-            r='4'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-          <line
-            x1='19'
-            y1='8'
-            x2='19'
-            y2='14'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-          <line
-            x1='22'
-            y1='11'
-            x2='16'
-            y2='11'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-        </svg>
-      ),
+      icon: UserPlus,
     },
-  ];
+  ], []);
 
   const renderContent = () => {
     const roles = [
@@ -274,19 +368,16 @@ export default function ProfileCreation() {
                 {roles.map(role => (
                   <button
                     key={role.id}
-                    onClick={() => {
-                      setSelectedRoleWithURL(role.id);
-                      setCurrentStepWithURL(2);
-                    }}
-                    className={`p-6 bg-white border-2 rounded-lg transition-all hover:border-green-600 hover:shadow-md ${
+                    onClick={() => selectRoleAndProceed(role.id as ProfileData['role'])}
+                    className={`p-6 bg-white border-2 rounded-lg transition-all duration-200 hover:border-green-600 hover:shadow-md hover:scale-105 transform ${
                       selectedRole === role.id
-                        ? 'border-green-600 bg-green-50'
+                        ? 'border-green-600 bg-green-50 scale-105 shadow-md'
                         : 'border-gray-200'
                     }`}
                   >
-                    <div className='text-4xl mb-3'>{role.icon}</div>
-                    <h4 className='font-medium text-black mb-1'>{role.name}</h4>
-                    <p className='text-sm text-gray-600 font-light'>
+                    <div className='text-4xl mb-3 transition-transform duration-200'>{role.icon}</div>
+                    <h4 className='font-medium text-black mb-1 transition-colors duration-200'>{role.name}</h4>
+                    <p className='text-sm text-gray-600 font-light transition-colors duration-200'>
                       {role.desc}
                     </p>
                   </button>
@@ -317,6 +408,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Enter full name'
+                        value={formData.name || ''}
+                        onChange={(e) => handleInputChange('name', e.target.value)}
                         required
                       />
                     </div>
@@ -327,6 +420,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Enter phone number'
+                        value={formData.phone_number || ''}
+                        onChange={(e) => handleInputChange('phone_number', e.target.value)}
                         required
                       />
                     </div>
@@ -337,6 +432,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Enter Aadhar number'
+                        value={formData.aadhar_number || ''}
+                        onChange={(e) => handleInputChange('aadhar_number', e.target.value)}
                         required
                       />
                     </div>
@@ -347,6 +444,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Optional profile ID'
+                        value={formData.profile_id || ''}
+                        onChange={(e) => handleInputChange('profile_id', e.target.value)}
                       />
                     </div>
                     <div className='space-y-1 lg:col-span-2'>
@@ -356,6 +455,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Complete address'
+                        value={formData.address || ''}
+                        onChange={(e) => handleInputChange('address', e.target.value)}
                         required
                       />
                     </div>
@@ -368,6 +469,8 @@ export default function ProfileCreation() {
                         placeholder='0.0000'
                         type='number'
                         step='any'
+                        value={formData.latitude || ''}
+                        onChange={(e) => handleInputChange('latitude', e.target.value)}
                         required
                       />
                     </div>
@@ -380,6 +483,8 @@ export default function ProfileCreation() {
                         placeholder='0.0000'
                         type='number'
                         step='any'
+                        value={formData.longitude || ''}
+                        onChange={(e) => handleInputChange('longitude', e.target.value)}
                         required
                       />
                     </div>
@@ -399,6 +504,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Land record details'
+                        value={formData.land_records || ''}
+                        onChange={(e) => handleInputChange('land_records', e.target.value)}
                       />
                     </div>
                     <div className='space-y-1'>
@@ -408,6 +515,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='e.g., Organic, GAP'
+                        value={formData.certifications || ''}
+                        onChange={(e) => handleInputChange('certifications', e.target.value)}
                       />
                       <p className='text-xs text-gray-500'>
                         Separate with commas
@@ -420,6 +529,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='e.g., Ashwagandha, Turmeric, Tulsi'
+                        value={formData.registered_crops || ''}
+                        onChange={(e) => handleInputChange('registered_crops', e.target.value)}
                       />
                       <p className='text-xs text-gray-500'>
                         Separate with commas
@@ -446,6 +557,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Enter unique profile ID'
+                        value={formData.profile_id || ''}
+                        onChange={(e) => handleInputChange('profile_id', e.target.value)}
                         required
                       />
                     </div>
@@ -456,6 +569,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Enter full name'
+                        value={formData.name || ''}
+                        onChange={(e) => handleInputChange('name', e.target.value)}
                         required
                       />
                     </div>
@@ -466,6 +581,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Enter phone number'
+                        value={formData.phone_number || ''}
+                        onChange={(e) => handleInputChange('phone_number', e.target.value)}
                         required
                       />
                     </div>
@@ -477,6 +594,8 @@ export default function ProfileCreation() {
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='company@example.com'
                         type='email'
+                        value={formData.company_email || ''}
+                        onChange={(e) => handleInputChange('company_email', e.target.value)}
                         required
                       />
                     </div>
@@ -487,6 +606,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Complete address'
+                        value={formData.address || ''}
+                        onChange={(e) => handleInputChange('address', e.target.value)}
                         required
                       />
                     </div>
@@ -499,6 +620,8 @@ export default function ProfileCreation() {
                         placeholder='0.0000'
                         type='number'
                         step='any'
+                        value={formData.latitude || ''}
+                        onChange={(e) => handleInputChange('latitude', e.target.value)}
                         required
                       />
                     </div>
@@ -511,6 +634,8 @@ export default function ProfileCreation() {
                         placeholder='0.0000'
                         type='number'
                         step='any'
+                        value={formData.longitude || ''}
+                        onChange={(e) => handleInputChange('longitude', e.target.value)}
                         required
                       />
                     </div>
@@ -530,6 +655,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='License number'
+                        value={getInputValue('license_no')}
+                        onChange={(e) => handleInputChange('license_no', e.target.value)}
                       />
                     </div>
                     <div className='space-y-1'>
@@ -539,6 +666,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Assigned collection area'
+                        value={getInputValue('area_assigned')}
+                        onChange={(e) => handleInputChange('area_assigned', e.target.value)}
                       />
                     </div>
                     <div className='space-y-1'>
@@ -548,6 +677,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='e.g., Forest Department License'
+                        value={getInputValue('certifications')}
+                        onChange={(e) => handleInputChange('certifications', e.target.value)}
                       />
                       <p className='text-xs text-gray-500'>
                         Separate with commas
@@ -560,6 +691,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='e.g., Ashwagandha, Brahmi'
+                        value={getInputValue('registered_species')}
+                        onChange={(e) => handleInputChange('registered_species', e.target.value)}
                       />
                       <p className='text-xs text-gray-500'>
                         Separate with commas
@@ -586,6 +719,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Enter unique profile ID'
+                        value={formData.profile_id || ''}
+                        onChange={(e) => handleInputChange('profile_id', e.target.value)}
                         required
                       />
                     </div>
@@ -596,6 +731,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Laboratory name'
+                        value={getInputValue('company_name')}
+                        onChange={(e) => handleInputChange('company_name', e.target.value)}
                         required
                       />
                     </div>
@@ -606,6 +743,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Phone number'
+                        value={formData.phone_number || ''}
+                        onChange={(e) => handleInputChange('phone_number', e.target.value)}
                         required
                       />
                     </div>
@@ -617,6 +756,8 @@ export default function ProfileCreation() {
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='lab@example.com'
                         type='email'
+                        value={formData.company_email || ''}
+                        onChange={(e) => handleInputChange('company_email', e.target.value)}
                         required
                       />
                     </div>
@@ -627,6 +768,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Laboratory location'
+                        value={getInputValue('location')}
+                        onChange={(e) => handleInputChange('location', e.target.value)}
                         required
                       />
                     </div>
@@ -646,6 +789,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Accreditation number'
+                        value={getInputValue('accreditation_no')}
+                        onChange={(e) => handleInputChange('accreditation_no', e.target.value)}
                       />
                     </div>
                     <div className='space-y-1'>
@@ -655,6 +800,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='e.g., Heavy Metals, Pesticides'
+                        value={getInputValue('test_capabilities')}
+                        onChange={(e) => handleInputChange('test_capabilities', e.target.value)}
                       />
                       <p className='text-xs text-gray-500'>
                         Separate with commas
@@ -667,6 +814,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='e.g., AYUSH-001, AYUSH-002'
+                        value={getInputValue('ayush_certificate')}
+                        onChange={(e) => handleInputChange('ayush_certificate', e.target.value)}
                       />
                       <p className='text-xs text-gray-500'>
                         Separate with commas
@@ -693,6 +842,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Enter unique profile ID'
+                        value={formData.profile_id || ''}
+                        onChange={(e) => handleInputChange('profile_id', e.target.value)}
                         required
                       />
                     </div>
@@ -703,6 +854,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Processing company name'
+                        value={getInputValue('company_name')}
+                        onChange={(e) => handleInputChange('company_name', e.target.value)}
                         required
                       />
                     </div>
@@ -713,6 +866,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Authorized person name'
+                        value={getInputValue('authority_name')}
+                        onChange={(e) => handleInputChange('authority_name', e.target.value)}
                         required
                       />
                     </div>
@@ -723,6 +878,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Phone number'
+                        value={formData.phone_number || ''}
+                        onChange={(e) => handleInputChange('phone_number', e.target.value)}
                         required
                       />
                     </div>
@@ -734,6 +891,8 @@ export default function ProfileCreation() {
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='company@example.com'
                         type='email'
+                        value={formData.company_email || ''}
+                        onChange={(e) => handleInputChange('company_email', e.target.value)}
                         required
                       />
                     </div>
@@ -744,6 +903,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='License number'
+                        value={getInputValue('license_no')}
+                        onChange={(e) => handleInputChange('license_no', e.target.value)}
                       />
                     </div>
                     <div className='space-y-1 lg:col-span-2'>
@@ -753,6 +914,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Complete address'
+                        value={getInputValue('address')}
+                        onChange={(e) => handleInputChange('address', e.target.value)}
                         required
                       />
                     </div>
@@ -772,6 +935,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Responsible person name'
+                        value={getInputValue('responsible_person')}
+                        onChange={(e) => handleInputChange('responsible_person', e.target.value)}
                       />
                     </div>
                     <div className='space-y-1'>
@@ -781,6 +946,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='e.g., ISO 22000, HACCP'
+                        value={getInputValue('certification_status')}
+                        onChange={(e) => handleInputChange('certification_status', e.target.value)}
                       />
                       <p className='text-xs text-gray-500'>
                         Separate with commas
@@ -793,6 +960,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='e.g., Drying, Grinding, Extraction'
+                        value={getInputValue('facilities')}
+                        onChange={(e) => handleInputChange('facilities', e.target.value)}
                       />
                       <p className='text-xs text-gray-500'>
                         Separate with commas
@@ -819,6 +988,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Enter unique profile ID'
+                        value={formData.profile_id || ''}
+                        onChange={(e) => handleInputChange('profile_id', e.target.value)}
                         required
                       />
                     </div>
@@ -829,6 +1000,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Manufacturing company name'
+                        value={getInputValue('company_name')}
+                        onChange={(e) => handleInputChange('company_name', e.target.value)}
                         required
                       />
                     </div>
@@ -839,6 +1012,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Phone number'
+                        value={formData.phone_number || ''}
+                        onChange={(e) => handleInputChange('phone_number', e.target.value)}
                         required
                       />
                     </div>
@@ -850,6 +1025,8 @@ export default function ProfileCreation() {
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='company@example.com'
                         type='email'
+                        value={formData.company_email || ''}
+                        onChange={(e) => handleInputChange('company_email', e.target.value)}
                         required
                       />
                     </div>
@@ -860,13 +1037,19 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='License number'
+                        value={getInputValue('license_no')}
+                        onChange={(e) => handleInputChange('license_no', e.target.value)}
                       />
                     </div>
                     <div className='space-y-1'>
                       <Label className='text-sm font-medium text-black'>
                         GMP Certified
                       </Label>
-                      <select className='w-full h-8 px-3 py-1 border border-gray-200 rounded-md focus:border-green-600 focus:ring-green-600 bg-transparent'>
+                      <select
+                        className='w-full h-8 px-3 py-1 border border-gray-200 rounded-md focus:border-green-600 focus:ring-green-600 bg-transparent'
+                        value={formData.gmp_certified || ''}
+                        onChange={(e) => handleInputChange('gmp_certified', e.target.value)}
+                      >
                         <option value=''>Select GMP Status</option>
                         <option value='true'>Yes</option>
                         <option value='false'>No</option>
@@ -879,6 +1062,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Complete address'
+                        value={getInputValue('address')}
+                        onChange={(e) => handleInputChange('address', e.target.value)}
                         required
                       />
                     </div>
@@ -903,6 +1088,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Enter unique profile ID'
+                        value={formData.profile_id || ''}
+                        onChange={(e) => handleInputChange('profile_id', e.target.value)}
                         required
                       />
                     </div>
@@ -913,6 +1100,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Packing company name'
+                        value={getInputValue('company_name')}
+                        onChange={(e) => handleInputChange('company_name', e.target.value)}
                         required
                       />
                     </div>
@@ -923,6 +1112,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Phone number'
+                        value={formData.phone_number || ''}
+                        onChange={(e) => handleInputChange('phone_number', e.target.value)}
                         required
                       />
                     </div>
@@ -934,6 +1125,8 @@ export default function ProfileCreation() {
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='company@example.com'
                         type='email'
+                        value={formData.company_email || ''}
+                        onChange={(e) => handleInputChange('company_email', e.target.value)}
                         required
                       />
                     </div>
@@ -944,6 +1137,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='License number'
+                        value={getInputValue('license_no')}
+                        onChange={(e) => handleInputChange('license_no', e.target.value)}
                       />
                     </div>
                     <div className='space-y-1'>
@@ -953,6 +1148,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Packing facility location'
+                        value={getInputValue('location')}
+                        onChange={(e) => handleInputChange('location', e.target.value)}
                       />
                     </div>
                   </div>
@@ -976,6 +1173,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Enter unique profile ID'
+                        value={formData.profile_id || ''}
+                        onChange={(e) => handleInputChange('profile_id', e.target.value)}
                         required
                       />
                     </div>
@@ -986,6 +1185,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Storage facility name'
+                        value={getInputValue('facility_name')}
+                        onChange={(e) => handleInputChange('facility_name', e.target.value)}
                         required
                       />
                     </div>
@@ -996,6 +1197,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='Storage facility location'
+                        value={getInputValue('location')}
+                        onChange={(e) => handleInputChange('location', e.target.value)}
                         required
                       />
                     </div>
@@ -1007,6 +1210,8 @@ export default function ProfileCreation() {
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='company@example.com'
                         type='email'
+                        value={formData.company_email || ''}
+                        onChange={(e) => handleInputChange('company_email', e.target.value)}
                         required
                       />
                     </div>
@@ -1017,6 +1222,8 @@ export default function ProfileCreation() {
                       <Input
                         className='border-gray-200 focus:border-green-600 focus:ring-green-600 h-8'
                         placeholder='e.g., ISO 9001, FSSAI'
+                        value={getInputValue('certification_status')}
+                        onChange={(e) => handleInputChange('certification_status', e.target.value)}
                       />
                     </div>
                   </div>
@@ -1044,19 +1251,7 @@ export default function ProfileCreation() {
               onClick={() => setCurrentStepWithURL(1)}
               className='flex items-center text-gray-600 hover:text-black transition-colors mb-4'
             >
-              <svg
-                className='w-4 h-4 mr-2'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M10 19l-7-7m0 0l7-7m-7 7h18'
-                />
-              </svg>
+              <ArrowLeft className='w-4 h-4 mr-2' />
               Back to Role Selection
             </button>
             <div className='flex items-center space-x-4 mb-4'>
@@ -1092,7 +1287,7 @@ export default function ProfileCreation() {
                   </div>
                 </div>
               </div>
-              <form className='space-y-4'>
+              <form onSubmit={handleSubmit} className='space-y-4'>
                 {getRoleForm()}
 
                 <div className='flex justify-between pt-4 border-t border-gray-200'>
@@ -1106,9 +1301,20 @@ export default function ProfileCreation() {
                   </Button>
                   <Button
                     type='submit'
-                    className='bg-green-600 hover:bg-green-700 text-white px-8'
+                    disabled={isSubmitting}
+                    className='bg-green-600 hover:bg-green-700 text-white px-8 disabled:opacity-50 disabled:cursor-not-allowed'
                   >
-                    Create {selectedRoleData?.name} Profile
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className='w-4 h-4 mr-2 animate-spin' />
+                        Creating Profile...
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle className='w-4 h-4 mr-2' />
+                        Create {selectedRoleData?.name} Profile
+                      </>
+                    )}
                   </Button>
                 </div>
               </form>
@@ -1123,57 +1329,19 @@ export default function ProfileCreation() {
 
   return (
     <div className='min-h-screen w-full relative text-gray-900'>
-      {/* Dashed Gradient */}
+      {/* Simplified Background Pattern */}
       <div
-        className='absolute inset-0 z-0'
+        className='absolute inset-0 z-0 bg-gray-50/30'
         style={{
-          backgroundImage: `
-            linear-gradient(to right, #e7e5e4 1px, transparent 1px),
-            linear-gradient(to bottom, #e7e5e4 1px, transparent 1px)
-          `,
-          backgroundSize: '20px 20px',
-          backgroundPosition: '0 0, 0 0',
-          maskImage: `
-            repeating-linear-gradient(
-              to right,
-              black 0px,
-              black 3px,
-              transparent 3px,
-              transparent 8px
-            ),
-            repeating-linear-gradient(
-              to bottom,
-              black 0px,
-              black 3px,
-              transparent 3px,
-              transparent 8px
-            )
-          `,
-          WebkitMaskImage: `
-            repeating-linear-gradient(
-              to right,
-              black 0px,
-              black 3px,
-              transparent 3px,
-              transparent 8px
-            ),
-            repeating-linear-gradient(
-              to bottom,
-              black 0px,
-              black 3px,
-              transparent 3px,
-              transparent 8px
-            )
-          `,
-          maskComposite: 'intersect',
-          WebkitMaskComposite: 'source-in',
+          backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(0,0,0,0.15) 1px, transparent 0)',
+          backgroundSize: '20px 20px'
         }}
       />
 
       <div className='flex h-screen relative z-10'>
         {/* Sidebar */}
         <div
-          className={`${sidebarCollapsed ? 'w-16' : 'w-64'} bg-white border-r border-gray-200 flex flex-col transition-all duration-200 ease-out will-change-[width]`}
+          className={`${sidebarCollapsed ? 'w-16' : 'w-64'} bg-white border-r border-gray-200 flex flex-col transition-[width] duration-200 ease-out will-change-[width]`}
         >
           {/* Logo & Toggle */}
           <div
@@ -1195,19 +1363,7 @@ export default function ProfileCreation() {
                     onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
                     className='p-1 rounded-md hover:bg-gray-100 transition-colors'
                   >
-                    <svg
-                      className='w-3 h-3 text-gray-600 transition-transform duration-200 rotate-180'
-                      fill='none'
-                      stroke='currentColor'
-                      viewBox='0 0 24 24'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth={2}
-                        d='M11 19l-7-7 7-7m8 14l-7-7 7-7'
-                      />
-                    </svg>
+                    <ChevronLeft className='w-3 h-3 text-gray-600 transition-transform duration-200 rotate-180' />
                   </button>
                 </div>
               ) : (
@@ -1228,19 +1384,7 @@ export default function ProfileCreation() {
                     onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
                     className='p-1.5 rounded-md hover:bg-gray-100 transition-colors'
                   >
-                    <svg
-                      className='w-4 h-4 text-gray-600 transition-transform duration-200'
-                      fill='none'
-                      stroke='currentColor'
-                      viewBox='0 0 24 24'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth={2}
-                        d='M11 19l-7-7 7-7m8 14l-7-7 7-7'
-                      />
-                    </svg>
+                    <ChevronLeft className='w-4 h-4 text-gray-600 transition-transform duration-200' />
                   </button>
                 </>
               )}
@@ -1264,11 +1408,7 @@ export default function ProfileCreation() {
                 }`}
                 title={sidebarCollapsed ? item.label : undefined}
               >
-                <div
-                  className={`${sidebarCollapsed ? 'w-5 h-5' : 'w-4 h-4'} transition-all duration-200 ease-out flex-shrink-0`}
-                >
-                  {item.icon}
-                </div>
+                <item.icon className={`${sidebarCollapsed ? 'w-5 h-5' : 'w-4 h-4'} transition-all duration-200 ease-out flex-shrink-0`} />
                 <span
                   className={`transition-opacity duration-200 ease-out ${
                     sidebarCollapsed
@@ -1296,19 +1436,7 @@ export default function ProfileCreation() {
                     className='w-8 h-8 p-0 text-xs'
                     title='Sign Out'
                   >
-                    <svg
-                      className='w-4 h-4'
-                      fill='none'
-                      stroke='currentColor'
-                      viewBox='0 0 24 24'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth={2}
-                        d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'
-                      />
-                    </svg>
+                    <LogOut className='w-4 h-4' />
                   </Button>
                 </Link>
               </div>

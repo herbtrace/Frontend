@@ -7,7 +7,8 @@ export default function Dashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    // Redirect to overview page
+    // Redirect to overview page with prefetch
+    router.prefetch('/dashboard/overview');
     router.replace('/dashboard/overview');
   }, [router]);
 

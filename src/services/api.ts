@@ -36,19 +36,19 @@ interface Location {
 
 interface FarmerProfile {
   role: 'farmer';
-  farmer_id: string;
+  profile_id?: string;
   name: string;
   phone_number: string;
   location: Location;
   land_records?: string;
   certifications?: string[];
   registered_crops?: string[];
-  aadhar_number?: string;
+  aadhar_number: string;
 }
 
 interface WildCollectorProfile {
   role: 'wild_collector';
-  wild_collector_id: string;
+  profile_id: string;
   name: string;
   phone_number: string;
   location: Location;
@@ -61,7 +61,7 @@ interface WildCollectorProfile {
 
 interface ProcessorProfile {
   role: 'processor';
-  processor_id: string;
+  profile_id: string;
   company_name: string;
   authority_name: string;
   address: string;
@@ -75,7 +75,7 @@ interface ProcessorProfile {
 
 interface LaboratoryProfile {
   role: 'laboratory';
-  lab_id: string;
+  profile_id: string;
   company_name: string;
   location: string;
   accreditation_no?: string;
@@ -87,7 +87,7 @@ interface LaboratoryProfile {
 
 interface ManufacturerProfile {
   role: 'manufacturer';
-  manufacturer_id: string;
+  profile_id: string;
   name: string;
   address: string;
   license_no?: string;
@@ -98,7 +98,7 @@ interface ManufacturerProfile {
 
 interface PackerProfile {
   role: 'packer';
-  packer_id: string;
+  profile_id: string;
   name: string;
   lic_no?: string;
   location?: string;
@@ -108,7 +108,7 @@ interface PackerProfile {
 
 interface StorageProfile {
   role: 'storage';
-  storage_id: string;
+  profile_id: string;
   facility_name: string;
   location: string;
   cert_status?: string;
@@ -124,53 +124,6 @@ type ProfileData =
   | PackerProfile
   | StorageProfile;
 
-// Transaction interfaces
-interface TransactionGetRequest {
-  profile_id: string;
-  role: string;
-}
-
-interface TransactionValidateRequest {
-  from_id: string;
-  to_id: string;
-  crops: number;
-  from_role: string;
-  to_role: string;
-  start_time: string;
-  event: {
-    batch_id: string;
-    crop_id: string;
-    start_time: string;
-  };
-}
-
-interface TransactionStartRequest {
-  batch_id: string;
-  actor_id: string;
-  crop_id: string;
-  location: Location;
-  start_date: string;
-  harvest_date: string;
-  environment: {
-    soil_quality: string;
-    moisture: number;
-    temperature: number;
-    humidity: number;
-    weather_conditions: string;
-    irrigation_method: string;
-  };
-  inputs: {
-    fertilizers: string;
-    pesticides_used: string;
-    organic_certified: boolean;
-  };
-  permits: Array<{
-    permit_id: string;
-    permit_type: string;
-    issuer: string;
-    valid_until: string;
-  }>;
-}
 
 export class ApiService {
   private static getAuthToken(): string | null {
@@ -249,28 +202,6 @@ export class ApiService {
     });
   }
 
-  static async getProfileById(id: string): Promise<ProfileData> {
-    return this.makeRequest<ProfileData>(`/profiles/${id}`, {
-      method: 'GET',
-    });
-  }
-
-  static async updateProfile(
-    id: string,
-    profileData: Partial<ProfileData>
-  ): Promise<ProfileCreateResponse> {
-    return this.makeRequest<ProfileCreateResponse>(`/profiles/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(profileData),
-    });
-  }
-
-  static async deleteProfile(id: string): Promise<{ message: string }> {
-    return this.makeRequest<{ message: string }>(`/profiles/${id}`, {
-      method: 'DELETE',
-    });
-  }
-
   static async loginSCM(
     email: string,
     password: string
@@ -288,37 +219,6 @@ export class ApiService {
     }
 
     return response;
-  }
-
-  // 📊 Transaction Management Endpoints
-  static async getTransaction(
-    data: TransactionGetRequest
-  ): Promise<TransactionGetResponse> {
-    return this.makeRequest<TransactionGetResponse>('/transactions/get', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  }
-
-  static async validateTransaction(
-    data: TransactionValidateRequest
-  ): Promise<TransactionValidateResponse> {
-    return this.makeRequest<TransactionValidateResponse>(
-      '/transactions/validate',
-      {
-        method: 'POST',
-        body: JSON.stringify(data),
-      }
-    );
-  }
-
-  static async startTransaction(
-    data: TransactionStartRequest
-  ): Promise<TransactionStartResponse> {
-    return this.makeRequest<TransactionStartResponse>('/transactions/start', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
   }
 
   // Auth utilities
@@ -346,12 +246,6 @@ export type {
   PackerProfile,
   StorageProfile,
   Location,
-  TransactionGetRequest,
-  TransactionValidateRequest,
-  TransactionStartRequest,
   LoginResponse,
   ProfileCreateResponse,
-  TransactionGetResponse,
-  TransactionValidateResponse,
-  TransactionStartResponse,
 };

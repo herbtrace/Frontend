@@ -1,10 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ApiService } from '@/services/api';
+import {
+  LayoutGrid,
+  Users,
+  UserPlus,
+  ChevronLeft,
+  LogOut,
+  CheckCircle,
+  Package,
+  Trophy,
+  UserCheck
+} from 'lucide-react';
 
 // Utility function to format dates consistently
 const formatTime = (minutesAgo: number) => {
@@ -149,198 +160,42 @@ export default function DashboardOverview() {
     setRecentActivities(activities);
   };
 
-  const sidebarItems = [
+  const sidebarItems = useMemo(() => [
     {
       id: 'overview',
       label: 'Overview',
       href: '/dashboard/overview',
-      icon: (
-        <svg
-          className='w-full h-full'
-          fill='none'
-          stroke='currentColor'
-          viewBox='0 0 24 24'
-        >
-          <rect
-            x='3'
-            y='3'
-            width='7'
-            height='7'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-          <rect
-            x='14'
-            y='3'
-            width='7'
-            height='7'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-          <rect
-            x='14'
-            y='14'
-            width='7'
-            height='7'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-          <rect
-            x='3'
-            y='14'
-            width='7'
-            height='7'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-        </svg>
-      ),
+      icon: LayoutGrid,
     },
     {
       id: 'profiles',
       label: 'All Profiles',
       href: '/dashboard/profiles',
-      icon: (
-        <svg
-          className='w-full h-full'
-          fill='none'
-          stroke='currentColor'
-          viewBox='0 0 24 24'
-        >
-          <path
-            d='M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-          <circle
-            cx='9'
-            cy='7'
-            r='4'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-          <path
-            d='M23 21v-2a4 4 0 0 0-3-3.87'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-          <path
-            d='M16 3.13a4 4 0 0 1 0 7.75'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-        </svg>
-      ),
+      icon: Users,
     },
     {
       id: 'create-profile',
       label: 'Create Profile',
       href: '/dashboard/profile-creation',
-      icon: (
-        <svg
-          className='w-full h-full'
-          fill='none'
-          stroke='currentColor'
-          viewBox='0 0 24 24'
-        >
-          <path
-            d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-          <circle
-            cx='9'
-            cy='7'
-            r='4'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-          <line
-            x1='19'
-            y1='8'
-            x2='19'
-            y2='14'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-          <line
-            x1='22'
-            y1='11'
-            x2='16'
-            y2='11'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-        </svg>
-      ),
+      icon: UserPlus,
     },
-  ];
+  ], []);
 
   return (
     <div className='min-h-screen w-full relative text-gray-900'>
-      {/* Dashed Gradient */}
+      {/* Simplified Background Pattern */}
       <div
-        className='absolute inset-0 z-0'
+        className='absolute inset-0 z-0 bg-gray-50/30'
         style={{
-          backgroundImage: `
-            linear-gradient(to right, #e7e5e4 1px, transparent 1px),
-            linear-gradient(to bottom, #e7e5e4 1px, transparent 1px)
-          `,
-          backgroundSize: '20px 20px',
-          backgroundPosition: '0 0, 0 0',
-          maskImage: `
-            repeating-linear-gradient(
-              to right,
-              black 0px,
-              black 3px,
-              transparent 3px,
-              transparent 8px
-            ),
-            repeating-linear-gradient(
-              to bottom,
-              black 0px,
-              black 3px,
-              transparent 3px,
-              transparent 8px
-            )
-          `,
-          WebkitMaskImage: `
-            repeating-linear-gradient(
-              to right,
-              black 0px,
-              black 3px,
-              transparent 3px,
-              transparent 8px
-            ),
-            repeating-linear-gradient(
-              to bottom,
-              black 0px,
-              black 3px,
-              transparent 3px,
-              transparent 8px
-            )
-          `,
-          maskComposite: 'intersect',
-          WebkitMaskComposite: 'source-in',
+          backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(0,0,0,0.15) 1px, transparent 0)',
+          backgroundSize: '20px 20px'
         }}
       />
 
       <div className='flex h-screen relative z-10'>
         {/* Sidebar */}
         <div
-          className={`${sidebarCollapsed ? 'w-16' : 'w-64'} bg-white border-r border-gray-200 flex flex-col transition-all duration-200 ease-out will-change-[width]`}
+          className={`${sidebarCollapsed ? 'w-16' : 'w-64'} bg-white border-r border-gray-200 flex flex-col transition-[width] duration-200 ease-out will-change-[width]`}
         >
           {/* Logo & Toggle */}
           <div
@@ -362,19 +217,7 @@ export default function DashboardOverview() {
                     onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
                     className='p-1 rounded-md hover:bg-gray-100 transition-colors'
                   >
-                    <svg
-                      className='w-3 h-3 text-gray-600 transition-transform duration-200 rotate-180'
-                      fill='none'
-                      stroke='currentColor'
-                      viewBox='0 0 24 24'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth={2}
-                        d='M11 19l-7-7 7-7m8 14l-7-7 7-7'
-                      />
-                    </svg>
+                    <ChevronLeft className='w-3 h-3 text-gray-600 transition-transform duration-200 rotate-180' />
                   </button>
                 </div>
               ) : (
@@ -395,19 +238,7 @@ export default function DashboardOverview() {
                     onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
                     className='p-1.5 rounded-md hover:bg-gray-100 transition-colors'
                   >
-                    <svg
-                      className='w-4 h-4 text-gray-600 transition-transform duration-200'
-                      fill='none'
-                      stroke='currentColor'
-                      viewBox='0 0 24 24'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth={2}
-                        d='M11 19l-7-7 7-7m8 14l-7-7 7-7'
-                      />
-                    </svg>
+                    <ChevronLeft className='w-4 h-4 text-gray-600 transition-transform duration-200' />
                   </button>
                 </>
               )}
@@ -431,11 +262,7 @@ export default function DashboardOverview() {
                 }`}
                 title={sidebarCollapsed ? item.label : undefined}
               >
-                <div
-                  className={`${sidebarCollapsed ? 'w-5 h-5' : 'w-4 h-4'} transition-all duration-200 ease-out flex-shrink-0`}
-                >
-                  {item.icon}
-                </div>
+                <item.icon className={`${sidebarCollapsed ? 'w-5 h-5' : 'w-4 h-4'} transition-all duration-200 ease-out flex-shrink-0`} />
                 <span
                   className={`transition-opacity duration-200 ease-out ${
                     sidebarCollapsed
@@ -463,19 +290,7 @@ export default function DashboardOverview() {
                     className='w-8 h-8 p-0 text-xs'
                     title='Sign Out'
                   >
-                    <svg
-                      className='w-4 h-4'
-                      fill='none'
-                      stroke='currentColor'
-                      viewBox='0 0 24 24'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth={2}
-                        d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'
-                      />
-                    </svg>
+                    <LogOut className='w-4 h-4' />
                   </Button>
                 </Link>
               </div>
@@ -546,7 +361,7 @@ export default function DashboardOverview() {
                       </p>
                     </div>
                     <div className='w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center'>
-                      <span className='text-gray-600 text-sm'>👥</span>
+                      <Users className='w-4 h-4 text-gray-600' />
                     </div>
                   </div>
                   <p className='text-xs text-green-600 mt-2'>
@@ -565,7 +380,7 @@ export default function DashboardOverview() {
                       </p>
                     </div>
                     <div className='w-8 h-8 bg-green-100 rounded-full flex items-center justify-center'>
-                      <span className='text-green-600 text-sm'>✓</span>
+                      <CheckCircle className='w-4 h-4 text-green-600' />
                     </div>
                   </div>
                   <p className='text-xs text-green-600 mt-2'>
@@ -582,7 +397,7 @@ export default function DashboardOverview() {
                       <p className='text-3xl font-light text-black'>284</p>
                     </div>
                     <div className='w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center'>
-                      <span className='text-blue-600 text-sm'>📦</span>
+                      <Package className='w-4 h-4 text-blue-600' />
                     </div>
                   </div>
                   <p className='text-xs text-blue-600 mt-2'>+12% from last month</p>
@@ -597,7 +412,7 @@ export default function DashboardOverview() {
                       <p className='text-3xl font-light text-black'>97.2%</p>
                     </div>
                     <div className='w-8 h-8 bg-green-100 rounded-full flex items-center justify-center'>
-                      <span className='text-green-600 text-sm'>🏆</span>
+                      <Trophy className='w-4 h-4 text-green-600' />
                     </div>
                   </div>
                   <p className='text-xs text-green-600 mt-2'>+0.3% this week</p>
