@@ -1,4 +1,3 @@
-
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 // Response interfaces matching your backend
@@ -116,7 +115,14 @@ interface StorageProfile {
   company_email: string;
 }
 
-type ProfileData = FarmerProfile | WildCollectorProfile | ProcessorProfile | LaboratoryProfile | ManufacturerProfile | PackerProfile | StorageProfile;
+type ProfileData =
+  | FarmerProfile
+  | WildCollectorProfile
+  | ProcessorProfile
+  | LaboratoryProfile
+  | ManufacturerProfile
+  | PackerProfile
+  | StorageProfile;
 
 // Transaction interfaces
 interface TransactionGetRequest {
@@ -196,7 +202,7 @@ export class ApiService {
     const config: RequestInit = {
       headers: {
         'Content-Type': 'application/json',
-        ...(authToken && { 'Authorization': `Bearer ${authToken}` }),
+        ...(authToken && { Authorization: `Bearer ${authToken}` }),
         ...options.headers,
       },
       ...options,
@@ -210,7 +216,9 @@ export class ApiService {
           this.removeAuthToken();
         }
         const errorText = await response.text();
-        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        throw new Error(
+          `HTTP error! status: ${response.status}, message: ${errorText}`
+        );
       }
 
       return await response.json();
@@ -226,19 +234,24 @@ export class ApiService {
   }
 
   // 🔐 Profile Management Endpoints
-  static async createProfile(profileData: ProfileData): Promise<ProfileCreateResponse> {
+  static async createProfile(
+    profileData: ProfileData
+  ): Promise<ProfileCreateResponse> {
     return this.makeRequest<ProfileCreateResponse>('/profiles/create', {
       method: 'POST',
       body: JSON.stringify(profileData),
     });
   }
 
-  static async loginSCM(email: string, password: string): Promise<LoginResponse> {
+  static async loginSCM(
+    email: string,
+    password: string
+  ): Promise<LoginResponse> {
     const response = await this.makeRequest<LoginResponse>('/profiles/login', {
       method: 'POST',
       body: JSON.stringify({
         company_email: email,
-        password: password
+        password: password,
       }),
     });
 
@@ -250,21 +263,30 @@ export class ApiService {
   }
 
   // 📊 Transaction Management Endpoints
-  static async getTransaction(data: TransactionGetRequest): Promise<TransactionGetResponse> {
+  static async getTransaction(
+    data: TransactionGetRequest
+  ): Promise<TransactionGetResponse> {
     return this.makeRequest<TransactionGetResponse>('/transactions/get', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   }
 
-  static async validateTransaction(data: TransactionValidateRequest): Promise<TransactionValidateResponse> {
-    return this.makeRequest<TransactionValidateResponse>('/transactions/validate', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
+  static async validateTransaction(
+    data: TransactionValidateRequest
+  ): Promise<TransactionValidateResponse> {
+    return this.makeRequest<TransactionValidateResponse>(
+      '/transactions/validate',
+      {
+        method: 'POST',
+        body: JSON.stringify(data),
+      }
+    );
   }
 
-  static async startTransaction(data: TransactionStartRequest): Promise<TransactionStartResponse> {
+  static async startTransaction(
+    data: TransactionStartRequest
+  ): Promise<TransactionStartResponse> {
     return this.makeRequest<TransactionStartResponse>('/transactions/start', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -303,5 +325,5 @@ export type {
   ProfileCreateResponse,
   TransactionGetResponse,
   TransactionValidateResponse,
-  TransactionStartResponse
+  TransactionStartResponse,
 };

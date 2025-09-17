@@ -1,6 +1,12 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react';
 import { ApiService } from '@/services/api';
 
 interface User {
@@ -66,7 +72,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           email: response.company_email,
           name: 'Supply Chain Manager',
           role: response.role,
-          auth_token: response.auth_token
+          auth_token: response.auth_token,
         };
         setUser(scmUser);
         localStorage.setItem('herbtrace_user', JSON.stringify(scmUser));
@@ -90,12 +96,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     login,
     logout,
     isAuthenticated: !!user,
-    isLoading
+    isLoading,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

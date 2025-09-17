@@ -7,7 +7,7 @@ import type {
   ManufacturerData,
   PackerData,
   StorageData,
-  User
+  User,
 } from '../types';
 
 export const useProfileForms = (user: User | null) => {
@@ -19,20 +19,22 @@ export const useProfileForms = (user: User | null) => {
     land_records: '',
     certifications: [],
     registered_crops: [],
-    aadhar_number: ''
+    aadhar_number: '',
   });
 
-  const [wildCollectorData, setWildCollectorData] = useState<WildCollectorData>({
-    wild_collector_id: '',
-    name: '',
-    phone_number: '',
-    location: { lat: 0, long: 0, address: '' },
-    license_no: '',
-    area_assigned: '',
-    certifications: [],
-    company_email: user?.email || '',
-    registered_species: []
-  });
+  const [wildCollectorData, setWildCollectorData] = useState<WildCollectorData>(
+    {
+      wild_collector_id: '',
+      name: '',
+      phone_number: '',
+      location: { lat: 0, long: 0, address: '' },
+      license_no: '',
+      area_assigned: '',
+      certifications: [],
+      company_email: user?.email || '',
+      registered_species: [],
+    }
+  );
 
   const [processorData, setProcessorData] = useState<ProcessorData>({
     processor_id: '',
@@ -44,7 +46,7 @@ export const useProfileForms = (user: User | null) => {
     certification_status: [],
     facilities: [],
     company_email: user?.email || '',
-    phone_number: ''
+    phone_number: '',
   });
 
   const [laboratoryData, setLaboratoryData] = useState<LaboratoryData>({
@@ -55,7 +57,7 @@ export const useProfileForms = (user: User | null) => {
     test_capabilities: [],
     company_email: user?.email || '',
     ayush_certificate: [],
-    phone_number: ''
+    phone_number: '',
   });
 
   const [manufacturerData, setManufacturerData] = useState<ManufacturerData>({
@@ -65,7 +67,7 @@ export const useProfileForms = (user: User | null) => {
     license_no: '',
     GMP_certified: false,
     company_email: user?.email || '',
-    phone_number: ''
+    phone_number: '',
   });
 
   const [packerData, setPackerData] = useState<PackerData>({
@@ -74,7 +76,7 @@ export const useProfileForms = (user: User | null) => {
     lic_no: '',
     location: '',
     phone_number: '',
-    company_email: user?.email || ''
+    company_email: user?.email || '',
   });
 
   const [storageData, setStorageData] = useState<StorageData>({
@@ -82,7 +84,7 @@ export const useProfileForms = (user: User | null) => {
     facility_name: '',
     location: '',
     cert_status: '',
-    company_email: user?.email || ''
+    company_email: user?.email || '',
   });
 
   const resetAllForms = () => {
@@ -94,7 +96,7 @@ export const useProfileForms = (user: User | null) => {
       land_records: '',
       certifications: [],
       registered_crops: [],
-      aadhar_number: ''
+      aadhar_number: '',
     });
 
     setWildCollectorData({
@@ -106,7 +108,7 @@ export const useProfileForms = (user: User | null) => {
       area_assigned: '',
       certifications: [],
       company_email: user?.email || '',
-      registered_species: []
+      registered_species: [],
     });
 
     setProcessorData({
@@ -119,7 +121,7 @@ export const useProfileForms = (user: User | null) => {
       certification_status: [],
       facilities: [],
       company_email: user?.email || '',
-      phone_number: ''
+      phone_number: '',
     });
 
     setLaboratoryData({
@@ -130,7 +132,7 @@ export const useProfileForms = (user: User | null) => {
       test_capabilities: [],
       company_email: user?.email || '',
       ayush_certificate: [],
-      phone_number: ''
+      phone_number: '',
     });
 
     setManufacturerData({
@@ -140,7 +142,7 @@ export const useProfileForms = (user: User | null) => {
       license_no: '',
       GMP_certified: false,
       company_email: user?.email || '',
-      phone_number: ''
+      phone_number: '',
     });
 
     setPackerData({
@@ -149,7 +151,7 @@ export const useProfileForms = (user: User | null) => {
       lic_no: '',
       location: '',
       phone_number: '',
-      company_email: user?.email || ''
+      company_email: user?.email || '',
     });
 
     setStorageData({
@@ -157,7 +159,7 @@ export const useProfileForms = (user: User | null) => {
       facility_name: '',
       location: '',
       cert_status: '',
-      company_email: user?.email || ''
+      company_email: user?.email || '',
     });
   };
 
@@ -176,6 +178,6 @@ export const useProfileForms = (user: User | null) => {
     setPackerData,
     storageData,
     setStorageData,
-    resetAllForms
+    resetAllForms,
   };
 };

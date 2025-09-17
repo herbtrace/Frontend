@@ -1,4 +1,11 @@
-export type ProfileRole = 'farmer' | 'wild_collector' | 'processor' | 'laboratory' | 'manufacturer' | 'packer' | 'storage';
+export type ProfileRole =
+  | 'farmer'
+  | 'wild_collector'
+  | 'processor'
+  | 'laboratory'
+  | 'manufacturer'
+  | 'packer'
+  | 'storage';
 
 export interface User {
   id: string;
