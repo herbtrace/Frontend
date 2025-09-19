@@ -23,7 +23,7 @@ HerbTrace Frontend delivers a comprehensive dashboard for supply chain stakehold
 1. Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/herbtrace/Frontend.git
 cd Frontend
 ```
 
